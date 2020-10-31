@@ -15,6 +15,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.deepOrangeAccent,
+        textTheme: TextTheme(
+          button: TextStyle(
+            fontSize: 16,
+          ),
+        ),
       ),
       home: LoginScreen(),
       routes: {
