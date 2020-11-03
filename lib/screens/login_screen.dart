@@ -45,41 +45,43 @@ class _LoginScreenState extends State<LoginScreen> {
               end: Alignment.bottomRight,
             )),
           ),
-          Container(
-            height: deviceSize.height,
-            width: deviceSize.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).accentColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black54,
-                        blurRadius: 10,
-                        offset: Offset(2, 2),
-                      )
-                    ],
-                  ),
-                  child: Text(
-                    currentScreen == ScreenType.Login
-                        ? 'Login'
-                        : 'Registration',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
+          SingleChildScrollView(
+            child: Container(
+              height: deviceSize.height,
+              width: deviceSize.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).accentColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black54,
+                          blurRadius: 10,
+                          offset: Offset(2, 2),
+                        )
+                      ],
+                    ),
+                    child: Text(
+                      currentScreen == ScreenType.Login
+                          ? 'Login'
+                          : 'Registration',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                currentScreen == ScreenType.Login
-                    ? LoginCard(switchScreenType)
-                    : SignupCard(switchScreenType),
-              ],
+                  currentScreen == ScreenType.Login
+                      ? LoginCard(switchScreenType)
+                      : SignupCard(switchScreenType),
+                ],
+              ),
             ),
           )
         ],

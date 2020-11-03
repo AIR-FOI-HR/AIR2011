@@ -22,6 +22,16 @@ class SignupCard extends StatelessWidget {
                   height: 10,
                 ),
                 TextFormField(
+                  decoration: InputDecoration(labelText: "Name"),
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: null,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: "Surname"),
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: null,
+                ),
+                TextFormField(
                   decoration: InputDecoration(labelText: "E-Mail"),
                   keyboardType: TextInputType.emailAddress,
                   onSaved: null,
