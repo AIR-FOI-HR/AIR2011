@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import './order.dart';
 import './users.dart';
 
@@ -18,14 +16,15 @@ class Orders {
         passpartout: 20,
         finished: true),
     Order(
-      id: '2',
-      orderDate: DateTime.now(),
-      buyer: users.allUsers[2],
-      worker: users.allUsers[0],
-      height: 20,
-      width: 20,
-      passpartout: 20,
-    ),
+        id: '2',
+        orderDate: DateTime.now(),
+        buyer: users.allUsers[2],
+        worker: users.allUsers[0],
+        height: 20,
+        width: 20,
+        passpartout: 20,
+        border: true,
+        doublePasspartout: true),
     Order(
         id: '3',
         orderDate: DateTime.now(),

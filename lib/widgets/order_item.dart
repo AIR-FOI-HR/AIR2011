@@ -1,3 +1,4 @@
+import 'package:air_2011/providers/user.dart';
 import 'package:air_2011/screens/add_edit_order_screen.dart';
 import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
   Order _thisOrder;
-  OrderItem(this._thisOrder);
+  User _loggedUser;
+  OrderItem(this._thisOrder, this._loggedUser);
   @override
   Widget build(BuildContext context) {
     return ListTile(
         onTap: () {
-          Navigator.of(context).pushNamed(OrderDetailScreen.routeName);
+          Navigator.of(context).pushNamed(OrderDetailScreen.routeName,
+              arguments: [_thisOrder, _loggedUser.userType]);
         },
         leading: Column(
           mainAxisSize: MainAxisSize.min,

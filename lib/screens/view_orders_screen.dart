@@ -21,7 +21,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   //temporary user instance, later will use logged user data
-  final _loggedUser = ViewOrdersScreen.ordersData.allOrders[1].buyer;
+  final _loggedUser = ViewOrdersScreen.ordersData.allOrders[1].worker;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,8 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                 child: ListView.builder(
                   itemBuilder: (_, i) => Column(
                     children: [
-                      OrderItem(ViewOrdersScreen.ordersData.allOrders[i]),
+                      OrderItem(ViewOrdersScreen.ordersData.allOrders[i],
+                          _loggedUser),
                       Divider()
                     ],
                   ),
