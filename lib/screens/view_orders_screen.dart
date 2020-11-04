@@ -1,5 +1,6 @@
 import 'package:air_2011/screens/add_edit_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
+import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   //used to access scaffold to open a drawer outside of appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  //temporary user instance, later will use logged user data
   final _loggedUser = ViewOrdersScreen.ordersData.allOrders[1].buyer;
 
   @override
@@ -32,36 +34,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
             SizedBox(
               height: 50,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        icon: Icon(
-                          Icons.menu,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        onPressed: () {
-                          _scaffoldKey.currentState.openDrawer();
-                        }),
-                    IconButton(
-                        icon: Icon(Icons.logout),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed(LoginScreen.routeName);
-                        }),
-                    CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
-                      child: Text(
-                        "${_loggedUser.name[0]}${_loggedUser.surname[0]}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ]),
-            ),
+            CustomAppbar(_scaffoldKey, _loggedUser),
             Container(
               height: deviceSize.height - 200,
               decoration: BoxDecoration(
@@ -91,7 +64,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
               .pushReplacementNamed(AddEditOrderScreen.routeName);
         },
       ),
-      drawer: AppDrawer(_loggedUser.name),
+      drawer: AppDrawer(),
     );
   }
 }

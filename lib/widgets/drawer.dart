@@ -1,20 +1,28 @@
 import 'package:air_2011/screens/add_edit_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
+import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
-  final String _loggedUserName;
-
-  AppDrawer(this._loggedUserName);
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
         children: [
-          AppBar(
-            title: Text('Hello ${_loggedUserName}'),
+          SizedBox(
+            height: 50,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.list_alt,
+              color: Theme.of(context).accentColor,
+            ),
+            title: Text('View all orders'),
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(ViewOrdersScreen.routeName);
+            },
           ),
           Divider(),
           ListTile(

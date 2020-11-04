@@ -1,5 +1,6 @@
 import 'package:air_2011/screens/add_edit_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
+import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (ctx) => LoginScreen(),
         AddEditOrderScreen.routeName: (ctx) => AddEditOrderScreen(),
         RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),
+        OrderDetailScreen.routeName: (ctx) => OrderDetailScreen(),
       },
     );
   }

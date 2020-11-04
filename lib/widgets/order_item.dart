@@ -1,4 +1,5 @@
 import 'package:air_2011/screens/add_edit_order_screen.dart';
+import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +12,7 @@ class OrderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         onTap: () {
-          Navigator.of(context).pushNamed(AddEditOrderScreen.routeName);
+          Navigator.of(context).pushNamed(OrderDetailScreen.routeName);
         },
         leading: Column(
           mainAxisSize: MainAxisSize.min,
