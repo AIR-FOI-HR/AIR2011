@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
-  //temporary user instance, later will use logged in user data
+  //Temporary user instance, later will use logged in user data
   final User tempVarUser;
 
   CustomAppbar(this._scaffoldKey, this.tempVarUser);

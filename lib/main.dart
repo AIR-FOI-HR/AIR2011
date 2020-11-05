@@ -1,4 +1,4 @@
-import 'package:air_2011/screens/add_edit_order_screen.dart';
+import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         ViewOrdersScreen.routeName: (ctx) => ViewOrdersScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
-        AddEditOrderScreen.routeName: (ctx) => AddEditOrderScreen(),
+        AddOrderScreen.routeName: (ctx) => AddOrderScreen(),
         RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),
         OrderDetailScreen.routeName: (ctx) => OrderDetailScreen(),
       },

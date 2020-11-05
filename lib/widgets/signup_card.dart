@@ -67,9 +67,12 @@ class SignupCard extends StatelessWidget {
                     changeScreenHandler();
                   },
                   child: Text("Login instead"),
-                  color: Theme.of(context).accentColor,
-                  textColor: Colors.white,
+                  textColor: Theme.of(context).accentColor,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                          color: Theme.of(context).accentColor, width: 3)),
                 ),
               ],
             ),

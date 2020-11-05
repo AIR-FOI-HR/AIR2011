@@ -63,6 +63,7 @@ class Orders {
     ),
   ];
 
+  //Getter for orders list
   List<Order> get allOrders {
     return [..._orders];
   }

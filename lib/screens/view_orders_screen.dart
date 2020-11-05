@@ -1,4 +1,4 @@
-import 'package:air_2011/screens/add_edit_order_screen.dart';
+import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
@@ -17,10 +17,10 @@ class ViewOrdersScreen extends StatefulWidget {
 }
 
 class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
-  //used to access scaffold to open a drawer outside of appbar
+  //Used to access scaffold to open a drawer from custom appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  //temporary user instance, later will use logged user data
+  //Temporary user instance, later will use logged user data
   final _loggedUser = ViewOrdersScreen.ordersData.allOrders[1].worker;
 
   @override
@@ -61,8 +61,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context)
-              .pushReplacementNamed(AddEditOrderScreen.routeName);
+          Navigator.of(context).pushReplacementNamed(AddOrderScreen.routeName);
         },
       ),
       drawer: AppDrawer(),

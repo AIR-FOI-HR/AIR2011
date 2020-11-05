@@ -2,7 +2,11 @@ import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginCard extends StatelessWidget {
+  /*Function handler for changing between
+    Login screen and Registration/Signup screen
+  */
   final Function changeScreenHandler;
+
   LoginCard(this.changeScreenHandler);
 
   @override
@@ -64,18 +68,23 @@ class LoginCard extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                RaisedButton(
+                FlatButton(
                   onPressed: () {
                     changeScreenHandler();
                   },
                   child: Text("Signup instead"),
-                  color: Theme.of(context).accentColor,
-                  textColor: Colors.white,
+                  textColor: Theme.of(context).accentColor,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                          color: Theme.of(context).accentColor, width: 3)),
                 ),
               ],
             ),

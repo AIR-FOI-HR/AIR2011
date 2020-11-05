@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import './user.dart';
 
 class Users {
-  //hardcoded list of users
+  //Hardcoded list of users
   List<User> _users = [
     new User(
         id: '1',
@@ -49,6 +49,7 @@ class Users {
     ),
   ];
 
+  //Getter for users list
   List<User> get allUsers {
     return [..._users];
   }

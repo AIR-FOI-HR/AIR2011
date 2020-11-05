@@ -15,6 +15,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   ScreenType currentScreen = ScreenType.Login;
 
+  /*Function for switching between Login screen
+    and Signup/Registration screen
+  */
   void switchScreenType() {
     if (currentScreen == ScreenType.Login) {
       setState(() {

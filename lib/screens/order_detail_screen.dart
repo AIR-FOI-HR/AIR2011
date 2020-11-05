@@ -1,3 +1,5 @@
+import 'package:air_2011/screens/add_order_screen.dart';
+
 import '../providers/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -147,6 +149,9 @@ class OrderDetailScreen extends StatelessWidget {
       floatingActionButton: _loggedInUserType == UserType.Admin
           ? FloatingActionButton(
               child: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddOrderScreen.routeName);
+              },
             )
           : null,
     );

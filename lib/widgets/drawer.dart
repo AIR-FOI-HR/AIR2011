@@ -1,4 +1,4 @@
-import 'package:air_2011/screens/add_edit_order_screen.dart';
+import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
@@ -45,7 +45,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Add new order'),
             onTap: () {
               Navigator.of(context)
-                  .pushReplacementNamed(AddEditOrderScreen.routeName);
+                  .pushReplacementNamed(AddOrderScreen.routeName);
             },
           ),
           Divider(),
