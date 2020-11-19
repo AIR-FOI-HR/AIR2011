@@ -3,9 +3,12 @@ import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

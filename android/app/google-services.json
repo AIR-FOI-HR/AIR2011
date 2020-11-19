@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "26840631711",
+    "firebase_url": "https://gkmapp-22af7.firebaseio.com",
+    "project_id": "gkmapp-22af7",
+    "storage_bucket": "gkmapp-22af7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26840631711:android:e7affa075cb159395d95aa",
+        "android_client_info": {
+          "package_name": "com.example.air_2011"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26840631711-42r1b4r79gf7kld7elocgbdaodg7qne0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApC6tDH555q8veHpUmPzOOZsaprRUKVM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26840631711-42r1b4r79gf7kld7elocgbdaodg7qne0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

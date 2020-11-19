@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   ScreenType currentScreen = ScreenType.Login;
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   /*Function for switching between Login screen
     and Signup/Registration screen
@@ -81,8 +82,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   currentScreen == ScreenType.Login
-                      ? LoginCard(switchScreenType)
-                      : SignupCard(switchScreenType),
+                      ? LoginCard(switchScreenType, _formKey)
+                      : SignupCard(switchScreenType, _formKey),
                 ],
               ),
             ),
@@ -91,4 +92,5 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
 }
