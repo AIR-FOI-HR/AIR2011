@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../providers/users.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
+import 'package:provider/provider.dart';
 
 class AddOrderScreen extends StatefulWidget {
   static const routeName = 'add-order';
-  static Users _usersData = Users();
+  //static Users _usersData = Users();
 
   @override
   _AddOrderScreenState createState() => _AddOrderScreenState();
@@ -16,24 +17,34 @@ class AddOrderScreen extends StatefulWidget {
 class _AddOrderScreenState extends State<AddOrderScreen> {
   var _usersDropDownItems = List<DropdownMenuItem>();
 
-  /*on initState takes user data from Users()
-    repository and prepares data for DropdownButtonFormField
+  //We need to check if the first build happen
+  //so the DropdownMenuItem won't be built again
+  //When first build happens _wasFirstBuild will
+  //be true
+  bool _wasFirstBuild = false;
+
+  /*_fillDropDownMenu takes user data from passed argument
+    and prepares data for DropdownButtonFormField
     in shape of DropdownMenuItems
   */
-  @override
-  void initState() {
-    AddOrderScreen._usersData.allUsers.forEach((user) {
+  void _fillDropDownMenu(usersList) {
+    usersList.allUsers.forEach((user) {
       _usersDropDownItems.add(DropdownMenuItem(
         child: Text("${user.email}"),
         value: user.id,
       ));
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    var _usersData = Provider.of<Users>(context);
+
+    if (!_wasFirstBuild) {
+      _fillDropDownMenu(_usersData);
+      _wasFirstBuild = true;
+    }
 
     bool _isCheckedBorder = false;
     bool _isCheckedPass = false;

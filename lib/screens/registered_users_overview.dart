@@ -3,13 +3,14 @@ import 'package:air_2011/widgets/drawer.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
 import 'package:flutter/material.dart';
 import '../screens/view_orders_screen.dart';
+import 'package:provider/provider.dart';
 
 class RegisteredUsersOverview extends StatelessWidget {
   static const routeName = 'registered-users';
-  static Users usersData = Users();
 
   @override
   Widget build(BuildContext context) {
+    var usersData = Provider.of<Users>(context);
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +33,7 @@ class RegisteredUsersOverview extends StatelessWidget {
             itemBuilder: (_, i) => Column(
               children: [UserListTile(usersData.allUsers[i]), Divider()],
             ),
-            itemCount: ViewOrdersScreen.ordersData.allOrders.length,
+            itemCount: usersData.allUsers.length,
           ),
         ),
       ),

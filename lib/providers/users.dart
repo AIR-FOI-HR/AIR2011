@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import './user.dart';
 
-class Users {
+class Users with ChangeNotifier {
   //Hardcoded list of users
   List<User> _users = [
     new User(

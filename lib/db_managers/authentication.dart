@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AuthenticationManipulator {
+class AuthenticationManipulator with ChangeNotifier {
   static Future<void> signUpUser(
       context, email, password, name, surname) async {
     try {

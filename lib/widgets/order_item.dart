@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
-  Order _thisOrder;
-  User _loggedUser;
+  final Order _thisOrder;
+  final User _loggedUser;
   OrderItem(this._thisOrder, this._loggedUser);
   @override
   Widget build(BuildContext context) {

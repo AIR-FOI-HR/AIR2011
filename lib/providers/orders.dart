@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 import './order.dart';
 import './users.dart';
 
-class Orders {
+class Orders with ChangeNotifier {
   static Users users = Users();
 
   //Hardcoded list of orders

@@ -3,14 +3,12 @@ import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../widgets/drawer.dart';
 
 class ViewOrdersScreen extends StatefulWidget {
   static const routeName = 'orders-screen';
-
-  static Orders ordersData = Orders();
 
   @override
   _ViewOrdersScreenState createState() => _ViewOrdersScreenState();
@@ -20,11 +18,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   //Used to access scaffold to open a drawer from custom appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  //Temporary user instance, later will use logged user data
-  final _loggedUser = ViewOrdersScreen.ordersData.allOrders[1].worker;
-
   @override
   Widget build(BuildContext context) {
+    var ordersData = Provider.of<Orders>(context);
+    //Temporary user instance, later will use logged user data
+    final _loggedUser = ordersData.allOrders[1].worker;
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
@@ -46,12 +44,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                 child: ListView.builder(
                   itemBuilder: (_, i) => Column(
                     children: [
-                      OrderItem(ViewOrdersScreen.ordersData.allOrders[i],
-                          _loggedUser),
+                      OrderItem(ordersData.allOrders[i], _loggedUser),
                       Divider()
                     ],
                   ),
-                  itemCount: ViewOrdersScreen.ordersData.allOrders.length,
+                  itemCount: ordersData.allOrders.length,
                 ),
               ),
             )
