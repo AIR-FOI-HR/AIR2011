@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 enum UserType { Admin, Buyer }
 
-class User {
+class AppUser {
   final String id;
   final String name;
   final String surname;
   final String email;
   final UserType userType;
 
-  User({
+  AppUser({
     @required this.id,
     @required this.email,
     @required this.name,

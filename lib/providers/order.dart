@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import './user.dart';
+import 'app_user.dart';
 
 class Order {
   final String id;
   final DateTime orderDate;
   final bool finished;
-  final User buyer;
-  final User worker;
+  final AppUser buyer;
+  final AppUser worker;
   final double height;
   final double width;
   final double passpartout;

@@ -3,7 +3,7 @@ import 'package:air_2011/screens/add_order_screen.dart';
 import '../providers/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../providers/user.dart';
+import '../providers/app_user.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   static const routeName = 'order-detail';

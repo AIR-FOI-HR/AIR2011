@@ -1,47 +1,47 @@
+import 'package:air_2011/db_managers/db_caller.dart';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:flutter/material.dart';
-
-import './user.dart';
 
 class Users with ChangeNotifier {
   //Hardcoded list of users
-  List<User> _users = [
-    new User(
+  List<AppUser> _users = [
+    new AppUser(
         id: '1',
         email: 'iivic@gmail.com',
         name: 'Ivo',
         surname: 'Ivic',
         userType: UserType.Admin),
-    new User(
+    new AppUser(
       id: '2',
       email: 'mmarkic@gmail.com',
       name: 'Marko',
       surname: 'Markic',
     ),
-    new User(
+    new AppUser(
       id: '3',
       email: 'pperic@gmail.com',
       name: 'Pero',
       surname: 'Peric',
     ),
-    new User(
+    new AppUser(
       id: '4',
       email: 'ivivic@gmail.com',
       name: 'Iva',
       surname: 'Ivic',
     ),
-    new User(
+    new AppUser(
       id: '5',
       email: 'mmatic@gmail.com',
       name: 'Mate',
       surname: 'Matic',
     ),
-    new User(
+    new AppUser(
       id: '6',
       email: 'aanic@gmail.com',
       name: 'Ana',
       surname: 'Anic',
     ),
-    new User(
+    new AppUser(
       id: '7',
       email: 'ppetric@gmail.com',
       name: 'Petra',
@@ -50,7 +50,7 @@ class Users with ChangeNotifier {
   ];
 
   //Getter for users list
-  List<User> get allUsers {
+  List<AppUser> get allUsers {
     return [..._users];
   }
 }

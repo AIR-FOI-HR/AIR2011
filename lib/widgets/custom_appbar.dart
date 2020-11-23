@@ -1,11 +1,11 @@
-import 'package:air_2011/providers/user.dart';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
   //Temporary user instance, later will use logged in user data
-  final User tempVarUser;
+  final AppUser tempVarUser;
 
   CustomAppbar(this._scaffoldKey, this.tempVarUser);
 

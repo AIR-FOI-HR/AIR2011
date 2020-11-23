@@ -1,4 +1,4 @@
-import 'package:air_2011/providers/user.dart';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
   final Order _thisOrder;
-  final User _loggedUser;
+  final AppUser _loggedUser;
   OrderItem(this._thisOrder, this._loggedUser);
   @override
   Widget build(BuildContext context) {

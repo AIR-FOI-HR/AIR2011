@@ -1,3 +1,5 @@
+import 'package:air_2011/db_managers/db_caller.dart';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,12 +8,15 @@ import 'package:flutter/widgets.dart';
 
 class AuthenticationManipulator with ChangeNotifier {
   static Future<void> signUpUser(
-      context, email, password, name, surname) async {
+      context, email, name, surname, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email.trim(), password: password);
       if (userCredential != null) {
         //Create in database user data
+        AppUser appUserSignup = new AppUser(id: userCredential.user.uid, email: email, name: name, surname: surname);
+        DatabaseManipulator.createUser(appUserSignup);
+        //continue with login
         print(userCredential);
       }
     } on FirebaseAuthException catch (e) {
@@ -33,10 +38,12 @@ class AuthenticationManipulator with ChangeNotifier {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email.trim(), password: password);
       if (userCredential != null) {
-        print(userCredential.user.uid);
-        if(isUserAdmin(userCredential.user.uid)){
-           Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
-        }
+        CollectionReference users = FirebaseFirestore.instance.collection('Administrator');
+         users.doc(userCredential.user.uid).get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+            Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
+          }
+        });
         //
       }
     } on FirebaseAuthException catch (e) {
@@ -48,16 +55,4 @@ class AuthenticationManipulator with ChangeNotifier {
     }
   }
 
-  static bool isUserAdmin(uid){
-        bool isAdmin = false;
-        CollectionReference users = FirebaseFirestore.instance.collection('Administrators');
-        users.doc(uid).get().then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-            print('User is administrator.');
-            isAdmin = true;
-          }
-        });
-        return isAdmin;
-
-  }
 }

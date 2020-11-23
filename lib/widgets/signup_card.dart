@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,7 +124,7 @@ class SignupCard extends StatelessWidget {
   void signUpTheUser(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      AuthenticationManipulator.signUpUser(context, _email, _password_second, _name, _surname);
+      AuthenticationManipulator.signUpUser(context, _email,_name, _surname, _password_second);
     }
   }
 
