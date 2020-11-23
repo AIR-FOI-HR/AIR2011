@@ -8,7 +8,7 @@ class LoginCard extends StatelessWidget {
   /*Function handler for changing between
     Login screen and Registration/Signup screen
   */
-  
+
   FirebaseAuth auth = FirebaseAuth.instance;
   final Function changeScreenHandler;
   final GlobalKey<FormState> _formKey;
@@ -28,31 +28,6 @@ class LoginCard extends StatelessWidget {
             key: _formKey,
             child: Column(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    RaisedButton(
-                      onPressed: () {},
-                      child: Text("Admin"),
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                    ),
-                    RaisedButton(
-                      onPressed: () {},
-                      child: Text("Buyer"),
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
                 TextFormField(
                     decoration: InputDecoration(labelText: "E-Mail"),
                     keyboardType: TextInputType.emailAddress,
@@ -66,7 +41,7 @@ class LoginCard extends StatelessWidget {
                 TextFormField(
                   decoration: InputDecoration(labelText: "Password"),
                   validator: (value) {
-                    if (value.isEmpty || value.length < 7 ) {
+                    if (value.isEmpty || value.length < 7) {
                       return 'Password must be at least 7 characters long.';
                     }
                     return null;
@@ -79,8 +54,6 @@ class LoginCard extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    // Navigator.of(context)
-                    //     .pushReplacementNamed(ViewOrdersScreen.routeName);
                     signIn(context);
                   },
                   child: Text("Login"),

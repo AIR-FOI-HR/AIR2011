@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../widgets/drawer.dart';
+import '../providers/users.dart';
 
 class ViewOrdersScreen extends StatefulWidget {
   static const routeName = 'orders-screen';
@@ -17,10 +18,10 @@ class ViewOrdersScreen extends StatefulWidget {
 class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   //Used to access scaffold to open a drawer from custom appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     var ordersData = Provider.of<Orders>(context);
+    //Provider.of<Users>(context).fetchClients();
     //Temporary user instance, later will use logged user data
     final _loggedUser = ordersData.allOrders[1].worker;
     final deviceSize = MediaQuery.of(context).size;

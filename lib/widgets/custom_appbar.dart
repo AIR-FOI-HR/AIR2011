@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/authentication.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class CustomAppbar extends StatelessWidget {
             icon: Icon(Icons.logout),
             color: Theme.of(context).primaryColor,
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+              AuthenticationManipulator.signOutUser(context);
             }),
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,

@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/authentication.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/order_detail_screen.dart';
@@ -26,7 +27,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Orders(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AuthenticationManipulator(),
+        ),
       ],
       child: MaterialApp(
         title: 'GKMApp',

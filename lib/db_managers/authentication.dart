@@ -5,19 +5,26 @@ import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import '../providers/users.dart';
 
 class AuthenticationManipulator with ChangeNotifier {
   static Future<void> signUpUser(
       context, email, name, surname, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email.trim(), password: password);
+          .createUserWithEmailAndPassword(
+              email: email.trim(), password: password);
       if (userCredential != null) {
         //Create in database user data
-        AppUser appUserSignup = new AppUser(id: userCredential.user.uid, email: email, name: name, surname: surname);
+        AppUser appUserSignup = new AppUser(
+            id: userCredential.user.uid,
+            email: email,
+            name: name,
+            surname: surname);
         DatabaseManipulator.createUser(appUserSignup);
         //continue with login
         print(userCredential);
+        Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -27,10 +34,10 @@ class AuthenticationManipulator with ChangeNotifier {
       }
     }
   }
-  static Future<void>signOutUser(context) async{
-    await FirebaseAuth.instance.signOut();
-     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
 
+  static Future<void> signOutUser(context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
   }
 
   static Future<void> loginUser(context, email, password) async {
@@ -38,13 +45,17 @@ class AuthenticationManipulator with ChangeNotifier {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email.trim(), password: password);
       if (userCredential != null) {
-        CollectionReference users = FirebaseFirestore.instance.collection('Administrator');
-         users.doc(userCredential.user.uid).get().then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-            Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
+        CollectionReference users =
+            FirebaseFirestore.instance.collection('Administrator');
+        users
+            .doc(userCredential.user.uid)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            Navigator.of(context)
+                .pushReplacementNamed(ViewOrdersScreen.routeName);
           }
         });
-        //
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -54,5 +65,4 @@ class AuthenticationManipulator with ChangeNotifier {
       }
     }
   }
-
 }

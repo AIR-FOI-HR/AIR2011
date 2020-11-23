@@ -8,10 +8,14 @@ import 'package:provider/provider.dart';
 class RegisteredUsersOverview extends StatelessWidget {
   static const routeName = 'registered-users';
 
+  Future<void> _fetchUsers(BuildContext context) async {
+    await Provider.of<Users>(context, listen: false).fetchClients();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var usersData = Provider.of<Users>(context);
     final deviceSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -29,11 +33,26 @@ class RegisteredUsersOverview extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemBuilder: (_, i) => Column(
-              children: [UserListTile(usersData.allUsers[i]), Divider()],
-            ),
-            itemCount: usersData.allUsers.length,
+          child: FutureBuilder(
+            future: _fetchUsers(context),
+            builder: (ctx, snapshot) =>
+                snapshot.connectionState == ConnectionState.waiting
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container(
+                        child: Consumer<Users>(
+                          builder: (ctx, userData, _) => ListView.builder(
+                            itemBuilder: (_, i) => Column(
+                              children: [
+                                UserListTile(userData.allUsers[i]),
+                                Divider()
+                              ],
+                            ),
+                            itemCount: userData.allUsers.length,
+                          ),
+                        ),
+                      ),
           ),
         ),
       ),

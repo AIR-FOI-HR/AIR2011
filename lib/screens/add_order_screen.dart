@@ -28,7 +28,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     in shape of DropdownMenuItems
   */
   void _fillDropDownMenu(usersList) {
-    usersList.allUsers.forEach((user) {
+    usersList.allUsers_hardcoded.forEach((user) {
       _usersDropDownItems.add(DropdownMenuItem(
         child: Text("${user.email}"),
         value: user.id,

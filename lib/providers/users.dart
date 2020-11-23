@@ -1,10 +1,12 @@
 import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/providers/app_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Users with ChangeNotifier {
-  //Hardcoded list of users
-  List<AppUser> _users = [
+  //Hardcoded list of users, right now only used
+  //for hardcoded orders
+  List<AppUser> _users_hardcoded = [
     new AppUser(
         id: '1',
         email: 'iivic@gmail.com',
@@ -49,8 +51,36 @@ class Users with ChangeNotifier {
     ),
   ];
 
-  //Getter for users list
+  //Getter for hardcoded users list
+  List<AppUser> get allUsers_hardcoded {
+    return [..._users_hardcoded];
+  }
+
+  //List of all users stored in database
+  List<AppUser> _users = [];
   List<AppUser> get allUsers {
     return [..._users];
+  }
+
+  Future<void> fetchClients() async {
+    List<AppUser> loadedUsers = [];
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Clients').get();
+    for (var doc in querySnapshot.docs) {
+      loadedUsers.add(AppUser(
+        id: doc.data()['ClientId'],
+        email: doc.data()['Email'],
+        name: doc.data()['Name'],
+        surname: doc.data()['Surname'],
+      ));
+    }
+    _users = loadedUsers;
+    notifyListeners();
+  }
+
+  void printUsers() {
+    for (var user in _users) {
+      print(user.id);
+    }
   }
 }

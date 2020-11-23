@@ -47,17 +47,16 @@ class SignupCard extends StatelessWidget {
                     return null;
                   },
                   onSaved: (input) => _surname = input,
-                  
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: "E-Mail"),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                      if (value.isEmpty || !value.contains('@')) {
-                        return 'Please enter a valid email address.';
-                      }
-                      return null;
-                    },
+                    if (value.isEmpty || !value.contains('@')) {
+                      return 'Please enter a valid email address.';
+                    }
+                    return null;
+                  },
                   onSaved: (input) => _email = input,
                 ),
                 TextFormField(
@@ -65,7 +64,7 @@ class SignupCard extends StatelessWidget {
                   obscureText: true,
                   onSaved: (input) => _password_first = input,
                   validator: (value) {
-                    if (value.isEmpty || value.length < 7 ) {
+                    if (value.isEmpty || value.length < 7) {
                       return 'Password must be at least 7 characters long.';
                     }
                     return null;
@@ -77,9 +76,9 @@ class SignupCard extends StatelessWidget {
                   onSaved: (input) => _password_second = input,
                   validator: (value) {
                     _formKey.currentState.save();
-                    if (value.isEmpty || value.length < 7 ) {
+                    if (value.isEmpty || value.length < 7) {
                       return 'Password must be at least 7 characters long.';
-                    }else if(value != _password_first){
+                    } else if (value != _password_first) {
                       print(_password_first);
                       return "First and second password do not match";
                     }
@@ -99,6 +98,8 @@ class SignupCard extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
                 ),
                 SizedBox(
                   height: 10,
@@ -124,7 +125,8 @@ class SignupCard extends StatelessWidget {
   void signUpTheUser(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      AuthenticationManipulator.signUpUser(context, _email,_name, _surname, _password_second);
+      AuthenticationManipulator.signUpUser(
+          context, _email, _name, _surname, _password_second);
     }
   }
 

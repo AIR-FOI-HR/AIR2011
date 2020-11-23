@@ -1,5 +1,5 @@
+import 'package:air_2011/db_managers/authentication.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
-import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +56,7 @@ class AppDrawer extends StatelessWidget {
             ),
             title: Text('Log Out'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+              AuthenticationManipulator.signOutUser(context);
             },
           ),
           Divider(),
