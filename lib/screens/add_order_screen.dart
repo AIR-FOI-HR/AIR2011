@@ -41,13 +41,30 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     final deviceSize = MediaQuery.of(context).size;
     var _usersData = Provider.of<Users>(context);
 
+    //Return custom InputDecoration for text fields
+    InputDecoration _textFieldDecoration(String text) {
+      return InputDecoration(
+        contentPadding: EdgeInsets.all(15),
+        labelText: text,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+      );
+    }
+
+    //First build check
     if (!_wasFirstBuild) {
       _fillDropDownMenu(_usersData);
       _wasFirstBuild = true;
     }
 
-    bool _isCheckedBorder = false;
-    bool _isCheckedPass = false;
+    //bool _isCheckedBorder = false;
+    //bool _isCheckedPass = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -61,147 +78,225 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
         width: deviceSize.width,
         padding: EdgeInsets.all(25),
         child: Form(
-          child: FooterView(
+            child: SingleChildScrollView(
+          child: Column(
             children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    DropdownButtonFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Buyer',
-                      ),
-                      items: _usersDropDownItems,
-                      onChanged: (_) {},
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(labelText: "Height"),
-                            keyboardType: TextInputType.number,
-                            onSaved: null,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                          child: TextFormField(
-                            decoration: InputDecoration(labelText: "Width"),
-                            keyboardType: TextInputType.number,
-                            onSaved: null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: TextFormField(
-                            decoration:
-                                InputDecoration(labelText: "Passpartout"),
-                            keyboardType: TextInputType.number,
-                            onSaved: null,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: TextFormField(
-                            decoration:
-                                InputDecoration(labelText: "Number of Glasses"),
-                            keyboardType: TextInputType.number,
-                            onSaved: null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        StatefulBuilder(builder:
-                            (BuildContext context, StateSetter setState) {
-                          return Flexible(
-                            child: CheckboxListTile(
-                              value: _isCheckedBorder,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _isCheckedBorder = value;
-                                });
-                              },
-                              title: Text(
-                                'Border',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              controlAffinity: ListTileControlAffinity.leading,
-                            ),
-                          );
-                        }),
-                        StatefulBuilder(builder:
-                            (BuildContext context, StateSetter setState) {
-                          return Flexible(
-                            child: CheckboxListTile(
-                              value: _isCheckedPass,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _isCheckedPass = value;
-                                });
-                              },
-                              title: Text(
-                                'Double passepartout',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              controlAffinity: ListTileControlAffinity.leading,
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ],
+              DropdownButtonFormField(
+                decoration: _textFieldDecoration(
+                  'Buyer',
                 ),
-              )
-            ],
-            footer: Footer(
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //TODO implement calculator
-                    Text(
-                      'Total: 0 HRK',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(ViewOrdersScreen.routeName);
-                      },
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor, fontSize: 20),
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(
-                              color: Theme.of(context).accentColor, width: 3)),
-                      height: 50,
-                      minWidth: 100,
-                    )
-                  ],
-                ),
+                items: _usersDropDownItems,
+                onChanged: (_) {},
               ),
-            ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Height"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Width"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Passpart / Glass Qty"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Frames included Qty"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Divider(
+                color: Colors.black38,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Text(
+                "Outside (main frame)",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Price/m2"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Divider(
+                color: Colors.black38,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Text(
+                "Outside (optional frame)",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Space (cm)"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Price/m2"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: Colors.black38,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Text(
+                "Outside (optional frame)",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Space (cm)"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: TextFormField(
+                      decoration: _textFieldDecoration("Price/m2"),
+                      keyboardType: TextInputType.number,
+                      onSaved: null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: Colors.black38,
+                thickness: 1.5,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //TODO implement calculator
+                  Text(
+                    'Total: 0 HRK',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(ViewOrdersScreen.routeName);
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                          color: Theme.of(context).accentColor, fontSize: 20),
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        side: BorderSide(
+                            color: Theme.of(context).accentColor, width: 3)),
+                    height: 50,
+                    minWidth: 100,
+                  )
+                ],
+              ),
+            ],
           ),
-        ),
+        )),
       ),
       drawer: AppDrawer(),
     );
