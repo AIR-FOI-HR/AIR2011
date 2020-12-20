@@ -23,32 +23,17 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   static String id = "";
-  // static DateTime orderDate;
-  // static bool finished = false;
-  // static AppUser _buyer;
-  // static AppUser _worker;
-  // static double _height;
-  // static double _width;
-  // static int _passpartoutGlass;
-  // static double _priceFrameOne;
-  // static double _priceFrameTwo;
-  // static double _spaceFrameTwo;
-  // static double _priceFrameThree;
-  // static double _spaceFrameThree;
-  // static double _total;
-  Order _model = new Order();
 
+  Order _model = new Order();
   static bool necessaryFilled = false;
    void calculateSum() {
-    print("It is here");
     if (_formKey.currentState.validate()) {
-      print("It is valid");
       var surface = (_model.width / 100) * (_model.height / 100);
       print(_model.width);
       print(_model.height);
       var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
 
-      _model.total = (volume * _model.passpartoutGlass * 90) + (surface * _model.priceFrameThree);
+      _model.total = (volume * _model.passpartoutGlass * 90) + (surface * _model.priceFrameOne);
 
       if ( _model.spaceFrameTwo != null &&
           _model.priceFrameTwo != null) {
@@ -333,7 +318,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                     children: [
                       //TODO implement calculator
                       Text(
-                        'Total: HRK',
+                        'Total:${_model.total}HRK',
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       FlatButton(
