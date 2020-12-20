@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'app_user.dart';
 
 class Order {
-  final String id;
-  final DateTime orderDate;
-  final bool finished;
-  final AppUser buyer;
-  final AppUser worker;
-  final double height;
-  final double width;
-  final double passpartout;
-  final int glassNumber;
-  final bool border;
-  final bool doublePasspartout;
+   String id;
+   DateTime orderDate;
+   bool finished;
+   AppUser buyer;
+   AppUser worker;
+   double height;
+   double width;
+   int passpartoutGlass;
+   double priceFrameOne;
+   double priceFrameTwo;
+   double spaceFrameTwo;
+   double priceFrameThree;
+   double spaceFrameThree;
+   double total;
 
   Order(
       {@required this.id,
@@ -22,8 +25,11 @@ class Order {
       @required this.worker,
       @required this.height,
       @required this.width,
-      this.border = false,
-      this.glassNumber = 1,
-      this.doublePasspartout = false,
-      @required this.passpartout});
+      @required this.passpartoutGlass = 1,
+      @required this.priceFrameOne,
+      this.priceFrameTwo,
+      this.priceFrameThree,
+      this.spaceFrameTwo,
+      this.spaceFrameThree,
+      @required this.total});
 }

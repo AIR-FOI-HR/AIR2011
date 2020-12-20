@@ -106,42 +106,42 @@ class OrderDetailScreen extends StatelessWidget {
                 ],
               ),
               Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Border:', style: Theme.of(context).textTheme.headline6),
-                  Icon(
-                    _orderInfo.border
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: Theme.of(context).accentColor,
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text('Border:', style: Theme.of(context).textTheme.headline6),
+              //     Icon(
+              //       _orderInfo.border
+              //           ? Icons.check_box
+              //           : Icons.check_box_outline_blank,
+              //       color: Theme.of(context).accentColor,
+              //     ),
+              //   ],
+              // ),
               Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Double passpartout:',
-                      style: Theme.of(context).textTheme.headline6),
-                  Icon(
-                    _orderInfo.doublePasspartout
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
-                    color: Theme.of(context).accentColor,
-                  ),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Number of glasses:',
-                      style: Theme.of(context).textTheme.headline6),
-                  Text("${_orderInfo.glassNumber}",
-                      style: Theme.of(context).textTheme.headline6),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text('Double passpartout:',
+              //         style: Theme.of(context).textTheme.headline6),
+              //     Icon(
+              //       _orderInfo.doublePasspartout
+              //           ? Icons.check_box
+              //           : Icons.check_box_outline_blank,
+              //       color: Theme.of(context).accentColor,
+              //     ),
+              //   ],
+              // ),
+              // Divider(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text('Number of glasses:',
+              //         style: Theme.of(context).textTheme.headline6),
+              //     Text("${_orderInfo.glassNumber}",
+              //         style: Theme.of(context).textTheme.headline6),
+              //   ],
+              // ),
             ],
           ),
         ),
