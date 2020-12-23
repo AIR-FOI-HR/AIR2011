@@ -1,7 +1,7 @@
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
+import 'package:air_2011/screens/single_order_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -59,7 +59,7 @@ class OrderItem extends StatelessWidget {
       ],
       child: ListTile(
           onTap: () {
-            Navigator.of(context).pushNamed(OrderDetailScreen.routeName,
+            Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
                 arguments: [_thisOrder, _loggedUser.userType]);
           },
           leading: Column(

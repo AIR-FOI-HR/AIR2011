@@ -1,8 +1,8 @@
 import 'package:air_2011/db_managers/authentication.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
-import 'package:air_2011/screens/order_detail_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
+import 'package:air_2011/screens/single_order_screen.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AddOrderScreen.routeName: (ctx) => AddOrderScreen(),
           RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),
-          OrderDetailScreen.routeName: (ctx) => OrderDetailScreen(),
+          SingleOrderScreen.routeName: (ctx) => SingleOrderScreen()
         },
       ),
     );
