@@ -21,9 +21,10 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     var ordersData = Provider.of<Orders>(context);
+    var usersData = Provider.of<Users>(context);
     //Provider.of<Users>(context).fetchClients();
     //Temporary user instance, later will use logged user data
-    final _loggedUser = ordersData.allOrders[1].worker;
+    final _loggedUser = usersData.getUserById(ordersData.allOrders[1].worker);
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,

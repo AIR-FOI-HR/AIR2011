@@ -4,6 +4,8 @@ import 'package:air_2011/screens/single_order_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/users.dart';
 
 import '../providers/order.dart';
 
@@ -13,7 +15,7 @@ class OrderItem extends StatelessWidget {
   OrderItem(this._thisOrder, this._loggedUser);
 
 //Handles what happens if the delete button has been clicked
-  Future<void> _deleteHandler(context) {
+  Future<void> _deleteHandler(context, _buyer) {
     return showDialog<void>(
         context: context,
         builder: (BuildContext ctx) {
@@ -25,7 +27,7 @@ class OrderItem extends StatelessWidget {
                   onPressed: () {
                     //Need to implement delete functionality
                     //Right now prints buyer's surname
-                    debugPrint(_thisOrder.buyer.surname);
+                    debugPrint(_buyer.surname);
                     Navigator.of(context).pop();
                   },
                   child: Text("Yes")),
@@ -39,6 +41,8 @@ class OrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _usersData = Provider.of<Users>(context, listen: false);
+    final AppUser _buyer = _usersData.getUserById(_thisOrder.buyer);
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.20,
@@ -54,7 +58,7 @@ class OrderItem extends StatelessWidget {
           caption: 'Delete',
           color: Theme.of(context).errorColor,
           icon: Icons.delete,
-          onTap: () => _deleteHandler(context),
+          onTap: () => _deleteHandler(context, _buyer),
         )
       ],
       child: ListTile(
@@ -75,8 +79,7 @@ class OrderItem extends StatelessWidget {
             ],
           ),
           title: Text('Buyer'),
-          subtitle:
-              Text('${_thisOrder.buyer.name} ${_thisOrder.buyer.surname}'),
+          subtitle: Text('${_buyer.name} ${_buyer.surname}'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

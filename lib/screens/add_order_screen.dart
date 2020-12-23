@@ -17,8 +17,6 @@ class AddOrderScreen extends StatefulWidget {
 }
 
 class _AddOrderScreenState extends State<AddOrderScreen> {
-  
-
   var _usersDropDownItems = List<DropdownMenuItem>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -26,30 +24,28 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
 
   Order _model = new Order();
   static bool necessaryFilled = false;
-   void calculateSum() {
+  void calculateSum() {
     if (_formKey.currentState.validate()) {
       var surface = (_model.width / 100) * (_model.height / 100);
       print(_model.width);
       print(_model.height);
       var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
 
-      _model.total = (volume * _model.passpartoutGlass * 90) + (surface * _model.priceFrameOne);
+      _model.total = (volume * _model.passpartoutGlass * 90) +
+          (surface * _model.priceFrameOne);
 
-      if ( _model.spaceFrameTwo != null &&
-          _model.priceFrameTwo != null) {
-        var tmpVol2 =
-            ((_model.width - _model.spaceFrameTwo) / 100) * ((_model.height - _model.spaceFrameTwo) / 100);
+      if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
+        var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
+            ((_model.height - _model.spaceFrameTwo) / 100);
         _model.total += tmpVol2 * _model.priceFrameTwo;
       }
-      if ( _model.spaceFrameThree != null &&
-          _model.priceFrameThree != null) {
+      if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
         var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
             ((_model.height - _model.spaceFrameThree) / 100);
         _model.total += tmpVol3 * _model.priceFrameThree;
       }
-  _model.total = double.parse(_model.total.toStringAsFixed(2));
+      _model.total = double.parse(_model.total.toStringAsFixed(2));
       print(_model.total);
-
     }
   }
 
@@ -136,7 +132,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                           decoration: _textFieldDecoration("Height"),
                           keyboardType: TextInputType.number,
-                          onChanged: (input) => _model.height = double.parse(input),
+                          onChanged: (input) =>
+                              _model.height = double.parse(input),
                         ),
                       ),
                       SizedBox(
@@ -146,7 +143,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                           decoration: _textFieldDecoration("Width"),
                           keyboardType: TextInputType.number,
-                          onChanged: (input) => _model.width = double.parse(input),
+                          onChanged: (input) =>
+                              _model.width = double.parse(input),
                         ),
                       ),
                     ],
@@ -318,7 +316,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                     children: [
                       //TODO implement calculator
                       Text(
-                        'Total:${_model.total}HRK',
+                        'Total:${_model.total == null ? "0" : _model.total} HRK',
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       FlatButton(
@@ -348,6 +346,4 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
       drawer: AppDrawer(),
     );
   }
-
- 
 }
