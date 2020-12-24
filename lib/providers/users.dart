@@ -78,12 +78,6 @@ class Users with ChangeNotifier {
     notifyListeners();
   }
 
-  void printUsers() {
-    for (var user in _users) {
-      print(user.id);
-    }
-  }
-
   AppUser getUserById(String id) {
     //getting hardcoded users for now
     return _users_hardcoded.firstWhere((user) => user.id == id);

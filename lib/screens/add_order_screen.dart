@@ -2,8 +2,11 @@ import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:air_2011/widgets/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../providers/users.dart';
+import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
@@ -16,37 +19,56 @@ class AddOrderScreen extends StatefulWidget {
   _AddOrderScreenState createState() => _AddOrderScreenState();
 }
 
+Future<void> _fetchUsers(BuildContext context) async {
+  await Provider.of<Users>(context, listen: false).fetchClients();
+}
+
 class _AddOrderScreenState extends State<AddOrderScreen> {
   var _usersDropDownItems = List<DropdownMenuItem>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final DatabaseManipulator db_caller = new DatabaseManipulator();
   static String id = "";
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   Order _model = new Order();
   static bool necessaryFilled = false;
   void calculateSum() {
     if (_formKey.currentState.validate()) {
-      var surface = (_model.width / 100) * (_model.height / 100);
-      print(_model.width);
-      print(_model.height);
-      var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
+      _formKey.currentState.save();
+      if (_model.width != null &&
+          _model.height != null &&
+          _model.priceFrameOne != null) {
+        var surface = (_model.width / 100) * (_model.height / 100);
+        var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
+        _model.total = (surface * _model.priceFrameOne);
+        if (_model.passpartoutGlass != null && _model.passpartoutGlass != 0) {
+          _model.total += (volume * _model.passpartoutGlass * 90);
+        }
 
-      _model.total = (volume * _model.passpartoutGlass * 90) +
-          (surface * _model.priceFrameOne);
-
-      if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
-        var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
-            ((_model.height - _model.spaceFrameTwo) / 100);
-        _model.total += tmpVol2 * _model.priceFrameTwo;
+        if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
+          var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
+              ((_model.height - _model.spaceFrameTwo) / 100);
+          _model.total += tmpVol2 * _model.priceFrameTwo;
+        }
+        if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
+          var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
+              ((_model.height - _model.spaceFrameThree) / 100);
+          _model.total += tmpVol3 * _model.priceFrameThree;
+        }
+        _model.total = double.parse(_model.total.toStringAsFixed(2));
+        print(_model.total);
       }
-      if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
-        var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
-            ((_model.height - _model.spaceFrameThree) / 100);
-        _model.total += tmpVol3 * _model.priceFrameThree;
-      }
-      _model.total = double.parse(_model.total.toStringAsFixed(2));
-      print(_model.total);
     }
+  }
+
+  void createNewOrder() async {
+    final User user = auth.currentUser;
+    final uid = user.uid;
+    _model.worker = uid;
+    DatabaseManipulator.addNewOrder(_model);
+    Navigator.of(context)
+                .pushReplacementNamed(ViewOrdersScreen.routeName);
+
   }
 
   //We need to check if the first build happen
@@ -60,7 +82,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     in shape of DropdownMenuItems
   */
   void _fillDropDownMenu(usersList) {
-    usersList.allUsers_hardcoded.forEach((user) {
+    usersList.fetchClients();
+    usersList.allUsers.forEach((user) {
       _usersDropDownItems.add(DropdownMenuItem(
         child: Text("${user.email}"),
         value: user.id,
@@ -71,6 +94,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    _fetchUsers(context);
     var _usersData = Provider.of<Users>(context);
 
     //Return custom InputDecoration for text fields
@@ -119,8 +143,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       'Buyer',
                     ),
                     items: _usersDropDownItems,
-                    onSaved: (input) => _model.buyer = input,
-                    onChanged: (_) {},
+                    onChanged: (input) => _model.buyer = input,
                   ),
                   SizedBox(
                     height: 10,
@@ -132,8 +155,10 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                           decoration: _textFieldDecoration("Height"),
                           keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.height = double.parse(input),
+                          onChanged: (input) => {
+                            _model.height = double.parse(input),
+                            calculateSum()
+                          },
                         ),
                       ),
                       SizedBox(
@@ -141,11 +166,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       ),
                       Flexible(
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Width"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.width = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Width"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.width = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -157,12 +183,13 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration:
-                              _textFieldDecoration("Passpart / Glass Qty"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.passpartoutGlass = int.parse(input),
-                        ),
+                            decoration:
+                                _textFieldDecoration("Passpart / Glass Qty"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.passpartoutGlass = int.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -203,11 +230,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Price/m2"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.priceFrameOne = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Price/m2"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.priceFrameOne = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -232,11 +260,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Space (cm)"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.spaceFrameTwo = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Space (cm)"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.spaceFrameTwo = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -248,11 +277,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Price/m2"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.priceFrameTwo = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Price/m2"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.priceFrameTwo = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -277,11 +307,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Space (cm)"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.spaceFrameThree = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Space (cm)"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.spaceFrameThree = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -293,11 +324,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         fit: FlexFit.loose,
                         child: TextFormField(
-                          decoration: _textFieldDecoration("Price/m2"),
-                          keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.priceFrameThree = double.parse(input),
-                        ),
+                            decoration: _textFieldDecoration("Price/m2"),
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) => {
+                                  _model.priceFrameThree = double.parse(input),
+                                  calculateSum()
+                                }),
                       ),
                     ],
                   ),
@@ -321,7 +353,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       ),
                       FlatButton(
                         onPressed: () {
-                          calculateSum();
+                          createNewOrder();
                         },
                         child: Text(
                           'Save',
