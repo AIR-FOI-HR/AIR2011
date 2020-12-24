@@ -11,8 +11,9 @@ import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
   final Order _thisOrder;
-  final AppUser _loggedUser;
-  OrderItem(this._thisOrder, this._loggedUser);
+
+  //final AppUser _loggedUser;
+  OrderItem(this._thisOrder);
 
 //Handles what happens if the delete button has been clicked
   Future<void> _deleteHandler(context, _buyer) {
@@ -63,8 +64,9 @@ class OrderItem extends StatelessWidget {
       ],
       child: ListTile(
           onTap: () {
+            //argument UserType will be taken out from logged in user
             Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
-                arguments: [_thisOrder, _loggedUser.userType]);
+                arguments: [_thisOrder, UserType.Admin]);
           },
           leading: Column(
             mainAxisSize: MainAxisSize.min,

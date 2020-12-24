@@ -1,14 +1,10 @@
-import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:air_2011/widgets/drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../providers/users.dart';
 import 'package:air_2011/db_managers/db_caller.dart';
-import 'package:footer/footer.dart';
-import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
 
 class AddOrderScreen extends StatefulWidget {
@@ -66,9 +62,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     final uid = user.uid;
     _model.worker = uid;
     DatabaseManipulator.addNewOrder(_model);
-    Navigator.of(context)
-                .pushReplacementNamed(ViewOrdersScreen.routeName);
-
+    Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
   }
 
   //We need to check if the first build happen

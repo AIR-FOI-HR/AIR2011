@@ -55,6 +55,8 @@ class LoginCard extends StatelessWidget {
                 RaisedButton(
                   onPressed: () {
                     signIn(context);
+                    //closes keyboard if not closed
+                    FocusScope.of(context).unfocus();
                   },
                   child: Text("Login"),
                   color: Theme.of(context).primaryColor,

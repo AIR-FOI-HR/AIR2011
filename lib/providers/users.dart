@@ -80,6 +80,6 @@ class Users with ChangeNotifier {
 
   AppUser getUserById(String id) {
     //getting hardcoded users for now
-    return _users_hardcoded.firstWhere((user) => user.id == id);
+    return _users.firstWhere((user) => user.id == id);
   }
 }

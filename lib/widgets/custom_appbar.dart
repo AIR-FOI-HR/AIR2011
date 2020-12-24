@@ -9,14 +9,11 @@ import 'package:flutter/material.dart';
 class CustomAppbar extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
   //Temporary user instance, later will use logged in user data
-  final AppUser tempVarUser;
 
-  CustomAppbar(this._scaffoldKey, this.tempVarUser);
+  CustomAppbar(this._scaffoldKey);
   static AppUser _loggedUser = null;
-  CollectionReference users = FirebaseFirestore.instance.collection('Administrator');
-
-
-
+  CollectionReference users =
+      FirebaseFirestore.instance.collection('Administrator');
 
   @override
   Widget build(BuildContext context) {
@@ -42,50 +39,50 @@ class CustomAppbar extends StatelessWidget {
     //     print(FirebaseAuth.instance.currentUser.uid);
     //   }
     // });
-     return FutureBuilder<DocumentSnapshot>(
+    return FutureBuilder<DocumentSnapshot>(
       future: users.doc(FirebaseAuth.instance.currentUser.uid).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
           var data = snapshot.data.data();
-          
+
           return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
-            }),
-        IconButton(
-            icon: Icon(Icons.logout),
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              AuthenticationManipulator.signOutUser(context);
-            }),
-        CircleAvatar(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
-          child: Text(
-            '${data['Name'][0]}${data['Surname'][0]}',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ]),
-    );
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      }),
+                  IconButton(
+                      icon: Icon(Icons.logout),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        AuthenticationManipulator.signOutUser(context);
+                      }),
+                  CircleAvatar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    child: Text(
+                      '${data['Name'][0]}${data['Surname'][0]}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ]),
+          );
         }
 
         return Text("loading");
       },
     );
-    
   }
 }

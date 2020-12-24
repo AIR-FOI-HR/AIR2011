@@ -47,6 +47,17 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
     }
   }
 
+  //Function returns empty string or real value depending on
+  //variable value in Order so we won't have null values in
+  //order item fields
+  String checkIfNull(double value) {
+    if (value == null) {
+      return "";
+    } else {
+      return value.toString();
+    }
+  }
+
   //We need to check if the first build happen
   //so the DropdownMenuItem won't be built again
   //When first build happens _wasFirstBuild will
@@ -164,7 +175,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                     endIndent: 10,
                   ),
                   Text(
-                    "Outside (def. frame)",
+                    "Outside (main frame)",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(
@@ -179,6 +190,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
                               _model.priceFrameOne = double.parse(input),
+                          initialValue: "${_orderInfo.priceFrameOne}",
                         ),
                       ),
                     ],
@@ -193,7 +205,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                     endIndent: 10,
                   ),
                   Text(
-                    "Outside (def. frame)",
+                    "Outside (optional frame)",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(
@@ -208,6 +220,8 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
                               _model.spaceFrameTwo = double.parse(input),
+                          initialValue:
+                              "${checkIfNull(_orderInfo.spaceFrameTwo)}",
                         ),
                       ),
                     ],
@@ -224,6 +238,61 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
                               _model.priceFrameTwo = double.parse(input),
+                          initialValue:
+                              "${checkIfNull(_orderInfo.priceFrameTwo)}",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    color: Colors.black38,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Text(
+                    "Outside (optional frame)",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: TextFormField(
+                          decoration: _textFieldDecoration("Space (cm)"),
+                          keyboardType: TextInputType.number,
+                          onChanged: (input) => {
+                            _model.spaceFrameThree = double.parse(input),
+                            calculateSum()
+                          },
+                          initialValue:
+                              "${checkIfNull(_orderInfo.spaceFrameThree)}",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: TextFormField(
+                          decoration: _textFieldDecoration("Price/m2"),
+                          keyboardType: TextInputType.number,
+                          onChanged: (input) => {
+                            _model.priceFrameThree = double.parse(input),
+                            calculateSum()
+                          },
+                          initialValue:
+                              "${checkIfNull(_orderInfo.priceFrameThree)}",
                         ),
                       ),
                     ],
@@ -241,7 +310,8 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total:${_model.total}HRK',
+                          //doesn't calculate right now, just takes total from DB
+                          'Total:${_orderInfo.total}HRK',
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ]),
@@ -312,7 +382,6 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
               ),
             )),
       ),
-      drawer: AppDrawer(),
     );
   }
 }

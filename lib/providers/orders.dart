@@ -60,22 +60,25 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchOrders() async {
     List<Order> loadedOrders = [];
+    _orders.clear();
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Order').get();
     for (var doc in querySnapshot.docs) {
       loadedOrders.add(Order(
         buyer: doc.data()['buyer'],
         worker: doc.data()['worker'],
-        height: doc.data()['height'],
-        width: doc.data()['width'],
+        height: double.tryParse(doc.data()['height'].toString()),
+        width: double.tryParse(doc.data()['width'].toString()),
         orderDate: DateTime.now(),
         passpartoutGlass: doc.data()['passpartoutGlass'],
-        priceFrameOne: doc.data()['priceFrameOne'],
-        priceFrameTwo: doc.data()['priceFrameTwo'],
-        spaceFrameTwo: doc.data()['spaceFrameTwo'],
-        priceFrameThree: doc.data()['priceFrameThree'],
-        spaceFrameThree: doc.data()['spaceFrameThree'],
-        total: doc.data()['total'],
+        priceFrameOne: double.tryParse(doc.data()['priceFrameOne'].toString()),
+        priceFrameTwo: double.tryParse(doc.data()['priceFrameTwo'].toString()),
+        spaceFrameTwo: double.tryParse(doc.data()['spaceFrameTwo'].toString()),
+        priceFrameThree:
+            double.tryParse(doc.data()['priceFrameThree'].toString()),
+        spaceFrameThree:
+            double.tryParse(doc.data()['spaceFrameThree'].toString()),
+        total: double.tryParse(doc.data()['total'].toString()),
         finished: doc.data()['finished'],
       ));
     }
