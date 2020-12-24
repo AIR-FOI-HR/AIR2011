@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 enum UserType { Admin, Buyer }
 
 class AppUser {
-  final String id;
-  final String name;
-  final String surname;
-  final String email;
-  final UserType userType;
+  String id;
+  String name;
+  String surname;
+  String email;
+  UserType userType;
 
   AppUser({
     @required this.id,
