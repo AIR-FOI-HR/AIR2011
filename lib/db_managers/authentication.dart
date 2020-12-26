@@ -5,6 +5,7 @@ import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/users.dart';
 
 class AuthenticationManipulator with ChangeNotifier {
@@ -38,6 +39,10 @@ class AuthenticationManipulator with ChangeNotifier {
   static Future<void> signOutUser(context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+
+    //deleting user info from phone
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   static Future<void> loginUser(context, email, password) async {
@@ -56,6 +61,11 @@ class AuthenticationManipulator with ChangeNotifier {
                 .pushReplacementNamed(ViewOrdersScreen.routeName);
           }
         });
+
+        //saving user info on phone after successfull login
+        final prefrences = await SharedPreferences.getInstance();
+        prefrences.setString('userEmail', email);
+        prefrences.setString('userPassword', password);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -64,5 +74,13 @@ class AuthenticationManipulator with ChangeNotifier {
         print('Wrong password provided for that user.');
       }
     }
+  }
+
+  static Future<bool> isUserLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('userEmail') == true) {
+      return true;
+    }
+    return false;
   }
 }

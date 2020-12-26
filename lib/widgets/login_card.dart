@@ -3,6 +3,7 @@ import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginCard extends StatelessWidget {
   /*Function handler for changing between
@@ -17,6 +18,8 @@ class LoginCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero,
+        () => tryAutoSignIn(context)); //just for calling tryAutoSignIn
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
       elevation: 6,
@@ -89,6 +92,16 @@ class LoginCard extends StatelessWidget {
   void signIn(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      AuthenticationManipulator.loginUser(context, _email, _password);
+    }
+  }
+
+  void tryAutoSignIn(context) async {
+    bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
+    if (userSignedIn) {
+      final prefs = await SharedPreferences.getInstance();
+      _email = prefs.getString('userEmail');
+      _password = prefs.getString('userPassword');
       AuthenticationManipulator.loginUser(context, _email, _password);
     }
   }
