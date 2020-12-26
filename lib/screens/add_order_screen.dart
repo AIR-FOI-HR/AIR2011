@@ -36,9 +36,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
           _model.priceFrameOne != null) {
         var surface = (_model.width / 100) * (_model.height / 100);
         var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
-        _model.total = (surface * _model.priceFrameOne);
+        _model.total = (volume * _model.priceFrameOne);
         if (_model.passpartoutGlass != null && _model.passpartoutGlass != 0) {
-          _model.total += (volume * _model.passpartoutGlass * 90);
+          _model.total += (surface * _model.passpartoutGlass * 90);
         }
 
         if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
