@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './order.dart';
 import './users.dart';
@@ -53,9 +54,15 @@ class Orders with ChangeNotifier {
     ),
   ];
 
+  List<Order> _filteredOrders = [];
+
   //Getter for orders list
   List<Order> get allOrders {
     return [..._orders];
+  }
+
+  List<Order> get filteredOrders {
+    return [..._filteredOrders];
   }
 
   Future<void> fetchOrders() async {
@@ -84,5 +91,28 @@ class Orders with ChangeNotifier {
     }
     _orders = loadedOrders;
     notifyListeners();
+  }
+
+  Future<void> filterByNotCompleted() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.finished == true);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByCompleted() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.finished == false);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByDate(DateTime pickedDate) async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) =>
+        DateFormat.yMd().format(element.orderDate) !=
+        DateFormat.yMd().format(pickedDate));
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
   }
 }
