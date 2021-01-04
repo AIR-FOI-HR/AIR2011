@@ -1,5 +1,6 @@
 import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/providers/app_user.dart';
+import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -59,6 +60,9 @@ class AuthenticationManipulator with ChangeNotifier {
           if (documentSnapshot.exists) {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreen.routeName);
+          }else{
+            Navigator.of(context)
+                .pushReplacementNamed(ViewOrdersScreenClient.routeName);
           }
         });
 

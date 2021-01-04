@@ -1,5 +1,6 @@
 import 'package:air_2011/db_managers/authentication.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
+import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         home: LoginScreen(),
         routes: {
           ViewOrdersScreen.routeName: (ctx) => ViewOrdersScreen(),
+          ViewOrdersScreenClient.routeName: (ctx) => ViewOrdersScreenClient(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AddOrderScreen.routeName: (ctx) => AddOrderScreen(),
           RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),

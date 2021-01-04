@@ -85,4 +85,33 @@ class Orders with ChangeNotifier {
     _orders = loadedOrders;
     notifyListeners();
   }
+
+  
+  Future<void> fetchSingleClientOrder(String clientId) async {
+    List<Order> loadedOrders = [];
+    _orders.clear();
+    List<DocumentSnapshot> documentSnapshot =
+        await FirebaseFirestore.instance.collection('Order').doc(clientId).snapshots().toList();
+    for (var doc in documentSnapshot) {
+      loadedOrders.add(Order(
+        buyer: doc.data()['buyer'],
+        worker: doc.data()['worker'],
+        height: double.tryParse(doc.data()['height'].toString()),
+        width: double.tryParse(doc.data()['width'].toString()),
+        orderDate: DateTime.now(),
+        passpartoutGlass: doc.data()['passpartoutGlass'],
+        priceFrameOne: double.tryParse(doc.data()['priceFrameOne'].toString()),
+        priceFrameTwo: double.tryParse(doc.data()['priceFrameTwo'].toString()),
+        spaceFrameTwo: double.tryParse(doc.data()['spaceFrameTwo'].toString()),
+        priceFrameThree:
+            double.tryParse(doc.data()['priceFrameThree'].toString()),
+        spaceFrameThree:
+            double.tryParse(doc.data()['spaceFrameThree'].toString()),
+        total: double.tryParse(doc.data()['total'].toString()),
+        finished: doc.data()['finished'],
+      ));
+    }    
+    _orders = loadedOrders;
+    notifyListeners();
+  }
 }
