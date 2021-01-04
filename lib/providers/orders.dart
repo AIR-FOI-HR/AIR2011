@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './order.dart';
 import './users.dart';
@@ -53,9 +54,15 @@ class Orders with ChangeNotifier {
     ),
   ];
 
+  List<Order> _filteredOrders = [];
+
   //Getter for orders list
   List<Order> get allOrders {
     return [..._orders];
+  }
+
+  List<Order> get filteredOrders {
+    return [..._filteredOrders];
   }
 
   Future<void> fetchOrders() async {
@@ -86,32 +93,26 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  
-  Future<void> fetchSingleClientOrder(String clientId) async {
-    List<Order> loadedOrders = [];
-    _orders.clear();
-    List<DocumentSnapshot> documentSnapshot =
-        await FirebaseFirestore.instance.collection('Order').doc(clientId).snapshots().toList();
-    for (var doc in documentSnapshot) {
-      loadedOrders.add(Order(
-        buyer: doc.data()['buyer'],
-        worker: doc.data()['worker'],
-        height: double.tryParse(doc.data()['height'].toString()),
-        width: double.tryParse(doc.data()['width'].toString()),
-        orderDate: DateTime.now(),
-        passpartoutGlass: doc.data()['passpartoutGlass'],
-        priceFrameOne: double.tryParse(doc.data()['priceFrameOne'].toString()),
-        priceFrameTwo: double.tryParse(doc.data()['priceFrameTwo'].toString()),
-        spaceFrameTwo: double.tryParse(doc.data()['spaceFrameTwo'].toString()),
-        priceFrameThree:
-            double.tryParse(doc.data()['priceFrameThree'].toString()),
-        spaceFrameThree:
-            double.tryParse(doc.data()['spaceFrameThree'].toString()),
-        total: double.tryParse(doc.data()['total'].toString()),
-        finished: doc.data()['finished'],
-      ));
-    }    
-    _orders = loadedOrders;
-    notifyListeners();
+  Future<void> filterByNotCompleted() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.finished == true);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByCompleted() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.finished == false);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByDate(DateTime pickedDate) async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) =>
+        DateFormat.yMd().format(element.orderDate) !=
+        DateFormat.yMd().format(pickedDate));
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
   }
 }
