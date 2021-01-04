@@ -73,8 +73,9 @@ class CustomAppbar extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                     child: Text(
-                      '${data['Name'][0]}${data['Surname'][0]}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      //'${data['Name'][0]}${data['Surname'][0]}',
+                      //Temporary solution to clients not be able to log in
+                      '', style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ]),
