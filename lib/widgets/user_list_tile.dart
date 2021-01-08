@@ -4,8 +4,16 @@ import '../providers/app_user.dart';
 
 class UserListTile extends StatelessWidget {
   final AppUser _thisUser;
-
+  bool filterBuild = false;
+  Function saveBuyer;
+  BuildContext ctx;
   UserListTile(this._thisUser);
+  UserListTile.fromFilter(
+    this._thisUser,
+    this.filterBuild,
+    this.ctx,
+    this.saveBuyer,
+  );
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -17,7 +25,12 @@ class UserListTile extends StatelessWidget {
             : Icons.person,
         color: Theme.of(context).accentColor,
       ),
-      onTap: () {},
+      onTap: () {
+        if (filterBuild) {
+          saveBuyer(_thisUser);
+          Navigator.pop(ctx);
+        }
+      },
     );
   }
 }

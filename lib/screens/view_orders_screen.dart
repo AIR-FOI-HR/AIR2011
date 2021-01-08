@@ -1,7 +1,9 @@
+import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
+import 'package:air_2011/widgets/user_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
@@ -36,6 +38,10 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
         await Provider.of<Orders>(context, listen: false)
             .filterByDate(_selectedDate);
         break;
+      case FilterState.Buyer:
+        await Provider.of<Orders>(context, listen: false)
+            .filterByBuyer(filterBuyer);
+        break;
       default:
         await Provider.of<Orders>(context, listen: false).fetchOrders();
         break;
@@ -58,16 +64,54 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
     });
   }
 
+  void saveBuyer(AppUser buyer) {
+    setState(() {
+      filterBuyer = buyer;
+      buyerSelected = true;
+      _filterState = FilterState.Buyer;
+    });
+  }
+
+  void createListViewDialog(
+      BuildContext context, Users users, Size deviceSize) {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            content: Container(
+              width: deviceSize.width - 50,
+              height: deviceSize.height - 300,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, i) {
+                  return Column(
+                    children: [
+                      UserListTile.fromFilter(
+                          users.allUsers[i], true, ctx, saveBuyer),
+                      Divider(),
+                    ],
+                  );
+                },
+                itemCount: users.allUsers.length,
+              ),
+            ),
+          );
+        });
+  }
+
   String _dropDownVal = 'No filter';
   bool dateSelected = false;
+  bool buyerSelected = false;
   bool built = false;
+  AppUser filterBuyer;
+  var _filterState = FilterState.NoFilter;
   //Used to access scaffold to open a drawer from custom appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     var usersData = Provider.of<Users>(context);
-    var _filterState = FilterState.NoFilter;
+    final deviceSize = MediaQuery.of(context).size;
     //Provider.of<Users>(context).fetchClients();
     //Temporary user instance, later will use logged user data
     if (!built) {
@@ -93,6 +137,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
           _filterState = FilterState.Date;
           break;
         case "Buyer":
+          if (!buyerSelected) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              createListViewDialog(context, usersData, deviceSize);
+            });
+          }
           break;
         case "No filter":
           _filterState = FilterState.NoFilter;
@@ -102,8 +151,6 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
           break;
       }
     }
-    //final _loggedUser = usersData.getUserById("6yefDcBz9GbXfGGMeXgh8rwB6CJ2");
-    final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -158,6 +205,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                             setState(() {
                               _dropDownVal = newVal;
                               dateSelected = false;
+                              buyerSelected = false;
                             });
                           }),
                     ),
@@ -174,17 +222,17 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 /*child:  Container(
-                    child: ListView.builder(
-                      itemBuilder: (_, i) => Column(
-                        children: [
-                          //Dodaj filter
-                          OrderItem(orderData[i]),
-                          Divider()
-                        ],
-                      ),
-                      itemCount: orderData.length,
-                    ),
-                  )*/
+                              child: ListView.builder(
+                                itemBuilder: (_, i) => Column(
+                                  children: [
+                                    //Dodaj filter
+                                    OrderItem(orderData[i]),
+                                    Divider()
+                                  ],
+                                ),
+                                itemCount: orderData.length,
+                              ),
+                            )*/
                 child: FutureBuilder(
                   future: _fetch(context, _filterState),
                   builder: (ctx, snapshot) => snapshot.connectionState ==

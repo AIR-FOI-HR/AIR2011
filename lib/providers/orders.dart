@@ -1,3 +1,4 @@
+import 'package:air_2011/providers/app_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -112,6 +113,13 @@ class Orders with ChangeNotifier {
     filteredOrders.removeWhere((element) =>
         DateFormat.yMd().format(element.orderDate) !=
         DateFormat.yMd().format(pickedDate));
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByBuyer(AppUser buyer) async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.buyer != buyer.id);
     _filteredOrders.clear();
     _filteredOrders = filteredOrders;
   }
