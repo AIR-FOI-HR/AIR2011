@@ -4,6 +4,7 @@ import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
@@ -111,6 +112,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     var usersData = Provider.of<Users>(context);
+    var  adminData = usersData.getAdminById(FirebaseAuth.instance.currentUser.uid);
     final deviceSize = MediaQuery.of(context).size;
     //Provider.of<Users>(context).fetchClients();
     //Temporary user instance, later will use logged user data

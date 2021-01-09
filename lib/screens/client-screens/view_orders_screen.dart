@@ -1,7 +1,8 @@
 import 'package:air_2011/screens/add_order_screen.dart';
+import 'package:air_2011/screens/client-screens/client_order_tile.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
-import 'package:air_2011/widgets/order_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/orders.dart';
@@ -17,7 +18,7 @@ class ViewOrdersScreenClient extends StatefulWidget {
 
 class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
   Future<void> _fetch(BuildContext context) async {
-    await Provider.of<Orders>(context, listen: false).fetchOrders();
+    await Provider.of<Orders>(context, listen: false).fetchUserOrders(FirebaseAuth.instance.currentUser.uid);
   }
 
   bool built = false;
@@ -31,7 +32,7 @@ class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
     //Temporary user instance, later will use logged user data
     if (!built) {
       Provider.of<Users>(context, listen: false).fetchClients();
-      Provider.of<Orders>(context, listen: false).fetchOrders();
+      Provider.of<Orders>(context, listen: false).fetchUserOrders(FirebaseAuth.instance.currentUser.uid);
       built = true;
     }
     //final _loggedUser = usersData.getUserById("6yefDcBz9GbXfGGMeXgh8rwB6CJ2");
@@ -65,7 +66,7 @@ class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
                             builder: (ctx, orderData, _) => ListView.builder(
                               itemBuilder: (_, i) => Column(
                                 children: [
-                                  OrderItem(orderData.allOrders[i]),
+                                  ClientOrderItem(orderData.allOrders[i]),
                                   Divider()
                                 ],
                               ),
