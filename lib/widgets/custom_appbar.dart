@@ -10,19 +10,21 @@ import '../providers/users.dart';
 
 class CustomAppbar extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
-  //Temporary user instance, later will use logged in user data
 
   CustomAppbar(this._scaffoldKey);
-  String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
-
-  String _getUserInitials(context) {
-    AppUser _user =
-        Provider.of<Users>(context, listen: false).getUserById(_loggedUserUid);
-    return "${_user.name[0]}${_user.surname[0]}";
-  }
-
+  bool built = false;
   @override
   Widget build(BuildContext context) {
+    Future<void> _getUsers() async {
+      if (!built) {
+        await Provider.of<Users>(context, listen: false).fetchClients();
+        built = true;
+      }
+    }
+
+    //final userData = Provider.of<Users>(context, listen: false);
+    final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
+    //final AppUser _user = userData.getUserById(_loggedUserUid);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -43,10 +45,26 @@ class CustomAppbar extends StatelessWidget {
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,
-          child: Text(
-            '${_getUserInitials(context)}',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          child: FutureBuilder(
+            future: _getUsers(),
+            builder: (ctx, snapshot) =>
+                snapshot.connectionState == ConnectionState.waiting
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container(
+                        child: Consumer<Users>(
+                          builder: (ctx, userData, _) => Text(
+                            "${userData.getUserById(_loggedUserUid).name[0]}${userData.getUserById(_loggedUserUid).surname[0]}",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
           ),
+          /*Text(
+            "${_user.name[0]}${_user.surname[0]}",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),*/
         ),
       ]),
     );

@@ -111,14 +111,15 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var usersData = Provider.of<Users>(context);
-    var  adminData = usersData.getAdminById(FirebaseAuth.instance.currentUser.uid);
+    var usersData = Provider.of<Users>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
     //Provider.of<Users>(context).fetchClients();
     //Temporary user instance, later will use logged user data
     if (!built) {
       Provider.of<Users>(context, listen: false).fetchClients();
       Provider.of<Orders>(context, listen: false).fetchOrders();
+      /*loggedInUser =
+          usersData.getUserById(FirebaseAuth.instance.currentUser.uid);*/
       built = true;
     } else {
       switch (_dropDownVal) {
@@ -223,18 +224,6 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                /*child:  Container(
-                              child: ListView.builder(
-                                itemBuilder: (_, i) => Column(
-                                  children: [
-                                    //Dodaj filter
-                                    OrderItem(orderData[i]),
-                                    Divider()
-                                  ],
-                                ),
-                                itemCount: orderData.length,
-                              ),
-                            )*/
                 child: FutureBuilder(
                   future: _fetch(context, _filterState),
                   builder: (ctx, snapshot) => snapshot.connectionState ==
