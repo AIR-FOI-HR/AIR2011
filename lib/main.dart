@@ -5,6 +5,7 @@ import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
+import 'package:air_2011/screens/splash_screen.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: LoginScreen(),
+        home: SplashScreen(),
         routes: {
           ViewOrdersScreen.routeName: (ctx) => ViewOrdersScreen(),
           ViewOrdersScreenClient.routeName: (ctx) => ViewOrdersScreenClient(),
