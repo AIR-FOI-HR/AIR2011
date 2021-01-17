@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../widgets/drawer.dart';
 import '../providers/users.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 enum FilterState { NoState, NoFilter, Completed, NotCompleted, Buyer, Date }
 
@@ -22,6 +23,52 @@ class ViewOrdersScreen extends StatefulWidget {
 
 class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    final FirebaseMessaging fbm = FirebaseMessaging();
+    //FirebaseMessaging messaging = new FirebaseMessaging.instance;
+    String _homeScreenText;
+    super.initState();
+
+    fbm.autoInitEnabled().then((bool autoInit) {
+      debugPrint('AUTOINIT ENABLED: $autoInit');
+    });
+
+    fbm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: ListTile(
+                    title: Text(message['notification']['title']),
+                    subtitle: Text(message['notification']['body']),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Ok'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ));
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+
+    fbm.getToken().then((String token) {
+      assert(token != null);
+      setState(() {
+        _homeScreenText = "Push Messaging token: $token";
+      });
+      print(_homeScreenText);
+    });
+  }
 
   Future<void> _fetch(BuildContext context, FilterState filterState) async {
     switch (filterState) {
