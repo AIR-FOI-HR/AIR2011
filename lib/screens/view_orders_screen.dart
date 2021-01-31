@@ -13,6 +13,11 @@ import '../providers/users.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 enum FilterState { NoState, NoFilter, Completed, NotCompleted, Buyer, Date }
+final FirebaseMessaging fbm = FirebaseMessaging();
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  return Future<void>.value();
+}
 
 class ViewOrdersScreen extends StatefulWidget {
   static const routeName = 'orders-screen';
@@ -26,10 +31,10 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
 
   @override
   void initState() {
-    final FirebaseMessaging fbm = FirebaseMessaging();
+    super.initState();
+    //final FirebaseMessaging fbm = FirebaseMessaging();
     //FirebaseMessaging messaging = new FirebaseMessaging.instance;
     String _homeScreenText;
-    super.initState();
 
     fbm.autoInitEnabled().then((bool autoInit) {
       debugPrint('AUTOINIT ENABLED: $autoInit');
