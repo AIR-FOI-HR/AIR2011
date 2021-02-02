@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/users.dart';
+import 'notifications.dart';
 
 class AuthenticationManipulator with ChangeNotifier {
   static Future<void> signUpUser(
@@ -17,12 +18,14 @@ class AuthenticationManipulator with ChangeNotifier {
           .createUserWithEmailAndPassword(
               email: email.trim(), password: password);
       if (userCredential != null) {
-        //Create in database user data
+        String fcmToken = await returnCurrentFcmToken();
         AppUser appUserSignup = new AppUser(
             id: userCredential.user.uid,
             email: email,
             name: name,
-            surname: surname);
+            surname: surname,
+            fcmToken: fcmToken);
+
         DatabaseManipulator.createUser(appUserSignup);
         //continue with login
         print(userCredential);
@@ -38,6 +41,10 @@ class AuthenticationManipulator with ChangeNotifier {
   }
 
   static Future<void> signOutUser(context) async {
+    //unlinking fcm token from user
+    final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
+    DatabaseManipulator.removeTokenFromUser(_loggedUserUid);
+
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
 
@@ -60,11 +67,15 @@ class AuthenticationManipulator with ChangeNotifier {
           if (documentSnapshot.exists) {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreen.routeName);
-          }else{
+          } else {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreenClient.routeName);
           }
         });
+
+        //linking fcm token to logged in user
+        final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
+        DatabaseManipulator.addTokenToUser(_loggedUserUid);
 
         //saving user info on phone after successfull login
         final prefrences = await SharedPreferences.getInstance();

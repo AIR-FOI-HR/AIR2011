@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/users.dart';
@@ -13,13 +14,19 @@ class SingleOrderClientScreen extends StatefulWidget {
   //static Users _usersData = Users();
 
   @override
-  _SingleOrderClientScreenState createState() => _SingleOrderClientScreenState();
+  _SingleOrderClientScreenState createState() =>
+      _SingleOrderClientScreenState();
 }
 
 class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Order _model = new Order();
+
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
+  }
 
   static bool necessaryFilled = false;
   void calculateSum() {
@@ -131,7 +138,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           initialValue: "${_orderInfo.height}",
                           onChanged: (input) =>
                               _model.height = double.parse(input),
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                       SizedBox(
@@ -145,7 +152,6 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           onChanged: (input) =>
                               _model.width = double.parse(input),
                           readOnly: true,
-
                         ),
                       ),
                     ],
@@ -166,7 +172,6 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.passpartoutGlass = int.parse(input),
                           readOnly: true,
                         ),
-                      
                       ),
                     ],
                   ),
@@ -228,7 +233,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.spaceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameTwo)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -247,7 +252,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.priceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameTwo)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -281,7 +286,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameThree)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -302,7 +307,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameThree)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],

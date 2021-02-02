@@ -10,6 +10,7 @@ class Users with ChangeNotifier {
   List<AppUser> get allUsers {
     return [..._users];
   }
+
   List<AppUser> get allAdmins {
     return [..._admins];
   }
@@ -19,18 +20,28 @@ class Users with ChangeNotifier {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Clients').get();
     for (var doc in querySnapshot.docs) {
-      loadedUsers.add(AppUser(
-        id: doc.data()['ClientId'],
-        email: doc.data()['Email'],
-        name: doc.data()['Name'],
-        surname: doc.data()['Surname'],
-      ));
+      var _fcmToken = doc.data()['FcmToken'];
+      if (_fcmToken != null) {
+        loadedUsers.add(AppUser(
+            id: doc.data()['ClientId'],
+            email: doc.data()['Email'],
+            name: doc.data()['Name'],
+            surname: doc.data()['Surname'],
+            fcmToken: _fcmToken));
+      } else {
+        loadedUsers.add(AppUser(
+          id: doc.data()['ClientId'],
+          email: doc.data()['Email'],
+          name: doc.data()['Name'],
+          surname: doc.data()['Surname'],
+        ));
+      }
     }
     _users = loadedUsers;
     notifyListeners();
   }
 
-Future<void> fetchAdministrator() async {
+  Future<void> fetchAdministrator() async {
     List<AppUser> loadedUsers = [];
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Administrator').get();
@@ -45,10 +56,12 @@ Future<void> fetchAdministrator() async {
     _admins = loadedUsers;
     notifyListeners();
   }
+
   AppUser getUserById(String id) {
     //getting hardcoded users for now
     return _users.firstWhere((user) => user.id == id);
   }
+
   AppUser getAdminById(String id) {
     //getting hardcoded users for now
     return _users.firstWhere((user) => user.id == id);

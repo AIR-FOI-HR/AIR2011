@@ -14,7 +14,6 @@ class _SplashScreen extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 1), () => tryAutoSignIn(context));
-    //Timer(Duration(seconds: 3), () => MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   @override
@@ -28,12 +27,9 @@ class _SplashScreen extends State<SplashScreen> {
     bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
     if (userSignedIn) {
       final prefs = await SharedPreferences.getInstance();
-      //_email = prefs.getString('userEmail');
-      //_password = prefs.getString('userPassword');
       AuthenticationManipulator.loginUser(context, prefs.getString('userEmail'),
           prefs.getString('userPassword'));
     } else {
-      //MaterialPageRoute(builder: (context) => LoginScreen());
       Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
     }
   }

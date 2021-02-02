@@ -32,6 +32,7 @@ dependencies:
   flutter_slidable:
   shared_preferences: ^0.5.12+4
   firebase_messaging: ^7.0.3
+  http: ^0.12.2
 
 
   # The following adds the Cupertino Icons font to your application.

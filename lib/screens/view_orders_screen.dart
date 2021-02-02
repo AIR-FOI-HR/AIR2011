@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
@@ -26,48 +27,8 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
 
   @override
   void initState() {
-    final FirebaseMessaging fbm = FirebaseMessaging();
-    //FirebaseMessaging messaging = new FirebaseMessaging.instance;
-    String _homeScreenText;
     super.initState();
-
-    fbm.autoInitEnabled().then((bool autoInit) {
-      debugPrint('AUTOINIT ENABLED: $autoInit');
-    });
-
-    fbm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: ListTile(
-                    title: Text(message['notification']['title']),
-                    subtitle: Text(message['notification']['body']),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Ok'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ));
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-
-    fbm.getToken().then((String token) {
-      assert(token != null);
-      setState(() {
-        _homeScreenText = "Push Messaging token: $token";
-      });
-      print(_homeScreenText);
-    });
+    setUpNotificationSystem(context);
   }
 
   Future<void> _fetch(BuildContext context, FilterState filterState) async {
