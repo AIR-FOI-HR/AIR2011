@@ -38,8 +38,8 @@ class AuthenticationManipulator with ChangeNotifier {
   }
 
   static Future<void> signOutUser(context) async {
-    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    await FirebaseAuth.instance.signOut();
 
     //deleting user info from phone
     final prefs = await SharedPreferences.getInstance();
@@ -60,7 +60,7 @@ class AuthenticationManipulator with ChangeNotifier {
           if (documentSnapshot.exists) {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreen.routeName);
-          }else{
+          } else {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreenClient.routeName);
           }

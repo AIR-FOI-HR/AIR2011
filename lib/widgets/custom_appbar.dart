@@ -18,6 +18,7 @@ class CustomAppbar extends StatelessWidget {
     Future<void> _getUsers() async {
       if (!built) {
         await Provider.of<Users>(context, listen: false).fetchClients();
+        await Provider.of<Users>(context, listen: false).fetchAdministrator();
         built = true;
       }
     }
