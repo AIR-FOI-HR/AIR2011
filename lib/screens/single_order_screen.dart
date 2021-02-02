@@ -22,6 +22,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
 
   Order _model = new Order();
 
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
+  }
+
   static bool necessaryFilled = false;
   void calculateSum() {
     if (_formKey.currentState.validate()) {
@@ -339,14 +344,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           minWidth: 100,
                         ),
                         FlatButton(
-                          //onPressed: () {},
-                          onPressed: () => {
-                            if (_buyer.fcmToken != null)
-                              {
-                                sendNotification(
-                                    'Test title', 'Test body', _buyer.fcmToken)
-                              }
-                          },
+                          onPressed: () {},
                           child: Text('Done',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor,
