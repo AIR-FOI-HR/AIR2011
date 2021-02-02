@@ -18,8 +18,6 @@ class LoginCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero,
-        () => tryAutoSignIn(context)); //just for calling tryAutoSignIn
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
       elevation: 6,

@@ -3,6 +3,8 @@ import 'package:air_2011/providers/order.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'notifications.dart';
+
 class DatabaseManipulator with ChangeNotifier {
   static void createUser(AppUser client) {
     CollectionReference clients =
@@ -11,7 +13,8 @@ class DatabaseManipulator with ChangeNotifier {
       'ClientId': client.id,
       'Name': client.name,
       'Surname': client.surname,
-      'Email': client.email
+      'Email': client.email,
+      'FcmToken': client.fcmToken
     }).then((value) => print("User has been added"));
   }
 
@@ -57,5 +60,18 @@ class DatabaseManipulator with ChangeNotifier {
       'total': order.total,
       'finished': order.finished,
     }).then((value) => print("A new order has been added"));
+  }
+
+  static Future<void> addTokenToUser(String userId) async {
+    String fcmToken = await returnCurrentFcmToken();
+    CollectionReference clients =
+        FirebaseFirestore.instance.collection('Clients');
+    clients.doc(userId).update({'FcmToken': fcmToken});
+  }
+
+  static void removeTokenFromUser(String userId) async {
+    CollectionReference clients =
+        FirebaseFirestore.instance.collection('Clients');
+    clients.doc(userId).update({'FcmToken': ''});
   }
 }

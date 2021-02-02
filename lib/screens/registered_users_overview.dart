@@ -16,7 +16,9 @@ class RegisteredUsersOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    setUpNotificationSystem(context);
+
+    setUpNotificationSystem(
+        context); //adding notification dialog for currently opened widget
 
     return Scaffold(
       appBar: AppBar(

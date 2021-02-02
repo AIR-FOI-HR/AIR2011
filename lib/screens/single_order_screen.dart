@@ -340,10 +340,13 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         ),
                         FlatButton(
                           //onPressed: () {},
-                          onPressed: () => sendNotification(
-                              'Ovo je naslov',
-                              'Ovo je tijelo',
-                              'eph8TMAuRwWcZ8MYdeLytj:APA91bGjg5HVm67_ZtHlNz_WF4CV2PSQEgToi9ACtfA50i2n7GO3L8iOfGuk0mXE0zzo53djrmWLJpcpNTHFgNe-bPCnfXlq5l3v9C6bKRf3SmHbnhPwwyGU4QswSFPtv2YRjINFaE2w'),
+                          onPressed: () => {
+                            if (_buyer.fcmToken != null)
+                              {
+                                sendNotification(
+                                    'Test title', 'Test body', _buyer.fcmToken)
+                              }
+                          },
                           child: Text('Done',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor,
