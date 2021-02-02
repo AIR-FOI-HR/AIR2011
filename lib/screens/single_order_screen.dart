@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
@@ -338,7 +339,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           minWidth: 100,
                         ),
                         FlatButton(
-                          onPressed: () {},
+                          //onPressed: () {},
+                          onPressed: () => sendNotification(
+                              'Ovo je naslov',
+                              'Ovo je tijelo',
+                              'eph8TMAuRwWcZ8MYdeLytj:APA91bGjg5HVm67_ZtHlNz_WF4CV2PSQEgToi9ACtfA50i2n7GO3L8iOfGuk0mXE0zzo53djrmWLJpcpNTHFgNe-bPCnfXlq5l3v9C6bKRf3SmHbnhPwwyGU4QswSFPtv2YRjINFaE2w'),
                           child: Text('Done',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor,

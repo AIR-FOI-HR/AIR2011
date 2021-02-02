@@ -60,7 +60,7 @@ class AuthenticationManipulator with ChangeNotifier {
           if (documentSnapshot.exists) {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreen.routeName);
-          }else{
+          } else {
             Navigator.of(context)
                 .pushReplacementNamed(ViewOrdersScreenClient.routeName);
           }
