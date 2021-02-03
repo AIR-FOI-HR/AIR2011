@@ -52,6 +52,15 @@ class AuthenticationManipulator with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+  static Future<void> forgotPassword(context,email) async {
+    //unlinking fcm token from user
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((value) => 
+      {
+         Navigator.of(context)
+                .pushReplacementNamed(LoginScreen.routeName)
+      }
+    );
+  }
 
   static Future<void> loginUser(context, email, password) async {
     try {

@@ -106,7 +106,7 @@ class SignupCard extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    changeScreenHandler();
+                    changeScreenHandler("Login");
                   },
                   child: Text("Login instead"),
                   textColor: Theme.of(context).accentColor,
