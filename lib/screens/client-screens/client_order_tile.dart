@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/users.dart';
@@ -14,6 +15,8 @@ class ClientOrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    setUpNotificationSystem(context);
+
     return ListTile(
         onTap: () {
           //argument UserType will be taken out from logged in user

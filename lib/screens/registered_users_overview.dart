@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/users.dart';
 import 'package:air_2011/widgets/drawer.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
@@ -15,6 +16,9 @@ class RegisteredUsersOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+
+    setUpNotificationSystem(
+        context); //adding notification dialog for currently opened widget
 
     return Scaffold(
       appBar: AppBar(

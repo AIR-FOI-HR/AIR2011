@@ -1,3 +1,4 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
@@ -20,6 +21,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Order _model = new Order();
+
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
+  }
 
   static bool necessaryFilled = false;
   void calculateSum() {

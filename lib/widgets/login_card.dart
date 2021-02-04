@@ -34,8 +34,6 @@ class LoginCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero,
-        () => tryAutoSignIn(context)); //just for calling tryAutoSignIn
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
       elevation: 0,
@@ -94,7 +92,7 @@ class LoginCard extends StatelessWidget {
                 ),
                 FlatButton(
                   onPressed: () {
-                    changeScreenHandler();
+                    changeScreenHandler("Registration");
                   },
                   child: Text("Signup instead"),
                   textColor: Theme.of(context).primaryColor,
@@ -103,6 +101,21 @@ class LoginCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                       side: BorderSide(
                           color: Theme.of(context).primaryColor, width: 3)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FlatButton(
+                  onPressed: () {
+                    changeScreenHandler("Forgotten");
+                  },
+                  child: Text("Reset password"),
+                  textColor: Theme.of(context).accentColor,
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                          color: Theme.of(context).accentColor, width: 3)),
                 ),
               ],
             ),
@@ -115,6 +128,11 @@ class LoginCard extends StatelessWidget {
       _formKey.currentState.save();
       AuthenticationManipulator.loginUser(context, _email, _password);
     }
+  }
+  void forgotPassword(context) async {
+      _formKey.currentState.save();
+      print(_email);
+      AuthenticationManipulator.forgotPassword(context, _email);
   }
 
   void tryAutoSignIn(context) async {

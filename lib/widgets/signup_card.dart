@@ -140,7 +140,7 @@ class SignupCard extends StatelessWidget {
                 ),
                 FlatButton(
                   onPressed: () {
-                    changeScreenHandler();
+                    changeScreenHandler("Login");
                   },
                   child: Text("Login instead"),
                   textColor: Theme.of(context).primaryColor,

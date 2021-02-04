@@ -20,12 +20,22 @@ class Users with ChangeNotifier {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Clients').get();
     for (var doc in querySnapshot.docs) {
-      loadedUsers.add(AppUser(
-        id: doc.data()['ClientId'],
-        email: doc.data()['Email'],
-        name: doc.data()['Name'],
-        surname: doc.data()['Surname'],
-      ));
+      var _fcmToken = doc.data()['FcmToken'];
+      if (_fcmToken != null) {
+        loadedUsers.add(AppUser(
+            id: doc.data()['ClientId'],
+            email: doc.data()['Email'],
+            name: doc.data()['Name'],
+            surname: doc.data()['Surname'],
+            fcmToken: _fcmToken));
+      } else {
+        loadedUsers.add(AppUser(
+          id: doc.data()['ClientId'],
+          email: doc.data()['Email'],
+          name: doc.data()['Name'],
+          surname: doc.data()['Surname'],
+        ));
+      }
     }
     _users = loadedUsers;
     notifyListeners();
