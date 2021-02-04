@@ -43,10 +43,11 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrangeAccent,
           scaffoldBackgroundColor: Colors.white,
           textTheme: TextTheme(
-            button: TextStyle(
-              fontSize: 16,
-            ),
-          ),
+              button: TextStyle(
+                fontSize: 16,
+              ),
+              subtitle2: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              caption: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         ),
         home: SplashScreen(),
         onGenerateRoute: (settings) {
