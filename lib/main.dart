@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './providers/users.dart';
 import './providers/orders.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +39,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'GKMApp',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primaryColor: Colors.black,
           accentColor: Colors.deepOrangeAccent,
+          scaffoldBackgroundColor: Colors.white,
           textTheme: TextTheme(
             button: TextStyle(
               fontSize: 16,
@@ -47,14 +49,47 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: SplashScreen(),
-        routes: {
-          ViewOrdersScreen.routeName: (ctx) => ViewOrdersScreen(),
-          ViewOrdersScreenClient.routeName: (ctx) => ViewOrdersScreenClient(),
-          SingleOrderClientScreen.routeName: (ctx) => SingleOrderClientScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          AddOrderScreen.routeName: (ctx) => AddOrderScreen(),
-          RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),
-          SingleOrderScreen.routeName: (ctx) => SingleOrderScreen()
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case 'orders-screen':
+              return PageTransition(
+                  child: ViewOrdersScreen(),
+                  type: PageTransitionType.bottomToTop);
+              break;
+            case '/login':
+              return PageTransition(
+                  child: LoginScreen(), type: PageTransitionType.topToBottom);
+              break;
+            case 'orders-screen-client':
+              return PageTransition(
+                  child: ViewOrdersScreenClient(),
+                  type: PageTransitionType.bottomToTop);
+              break;
+            case 'single-order-client':
+              return PageTransition(
+                  child: SingleOrderClientScreen(),
+                  type: PageTransitionType.leftToRight,
+                  settings: settings);
+              break;
+            case 'add-order':
+              return PageTransition(
+                  child: AddOrderScreen(),
+                  type: PageTransitionType.rightToLeft);
+              break;
+            case 'registered-users':
+              return PageTransition(
+                  child: RegisteredUsersOverview(),
+                  type: PageTransitionType.leftToRight);
+              break;
+            case 'single-order':
+              return PageTransition(
+                  child: SingleOrderScreen(),
+                  type: PageTransitionType.leftToRight,
+                  settings: settings);
+              break;
+            default:
+              return null;
+          }
         },
       ),
     );

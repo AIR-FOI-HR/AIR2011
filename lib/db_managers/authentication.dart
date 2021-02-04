@@ -45,8 +45,8 @@ class AuthenticationManipulator with ChangeNotifier {
     final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
     DatabaseManipulator.removeTokenFromUser(_loggedUserUid);
 
-    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    await FirebaseAuth.instance.signOut();
 
     //deleting user info from phone
     final prefs = await SharedPreferences.getInstance();

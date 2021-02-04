@@ -91,10 +91,6 @@ class OrderItem extends StatelessWidget {
                     : Icons.check_box_outline_blank,
                 color: Colors.green,
               ),
-              Icon(
-                Icons.notifications,
-                color: Theme.of(context).accentColor,
-              )
             ],
           )),
     );

@@ -9,6 +9,22 @@ class LoginCard extends StatelessWidget {
   /*Function handler for changing between
     Login screen and Registration/Signup screen
   */
+  InputDecoration _textFieldDecoration(
+      String text, BuildContext context, Icon icon) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.all(15),
+      labelText: text,
+      prefixIcon: icon,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor),
+      ),
+    );
+  }
 
   FirebaseAuth auth = FirebaseAuth.instance;
   final Function changeScreenHandler;
@@ -20,7 +36,7 @@ class LoginCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-      elevation: 6,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: Container(
           margin: EdgeInsets.all(10),
@@ -30,7 +46,8 @@ class LoginCard extends StatelessWidget {
             child: Column(
               children: [
                 TextFormField(
-                    decoration: InputDecoration(labelText: "E-Mail"),
+                    decoration: _textFieldDecoration(
+                        "E-Mail", context, Icon(Icons.email)),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value.isEmpty || !value.contains('@')) {
@@ -39,8 +56,12 @@ class LoginCard extends StatelessWidget {
                       return null;
                     },
                     onSaved: (input) => _email = input),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Password"),
+                  decoration: _textFieldDecoration(
+                      "Password", context, Icon(Icons.lock)),
                   validator: (value) {
                     if (value.isEmpty || value.length < 7) {
                       return 'Password must be at least 7 characters long.';
@@ -74,12 +95,12 @@ class LoginCard extends StatelessWidget {
                     changeScreenHandler("Registration");
                   },
                   child: Text("Signup instead"),
-                  textColor: Theme.of(context).accentColor,
+                  textColor: Theme.of(context).primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                       side: BorderSide(
-                          color: Theme.of(context).accentColor, width: 3)),
+                          color: Theme.of(context).primaryColor, width: 3)),
                 ),
                 SizedBox(
                   height: 10,
