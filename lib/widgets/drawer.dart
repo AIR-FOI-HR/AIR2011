@@ -15,7 +15,12 @@ class AppDrawer extends StatelessWidget {
   bool built = false;
   @override
   Widget build(BuildContext context) {
-    final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
+    String _tmpId =  "";
+    if(FirebaseAuth.instance.currentUser != null)
+    {
+      _tmpId =  FirebaseAuth.instance.currentUser.uid;
+    }
+    final String _loggedUserUid = _tmpId;
     final AppUser _loggedUser =
         Provider.of<Users>(context).getAdminById(_loggedUserUid);
 
