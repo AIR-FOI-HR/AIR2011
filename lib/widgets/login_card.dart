@@ -110,12 +110,8 @@ class LoginCard extends StatelessWidget {
                     changeScreenHandler("Forgotten");
                   },
                   child: Text("Reset password"),
-                  textColor: Theme.of(context).accentColor,
+                  textColor: Theme.of(context).primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      side: BorderSide(
-                          color: Theme.of(context).accentColor, width: 3)),
                 ),
               ],
             ),
@@ -129,10 +125,11 @@ class LoginCard extends StatelessWidget {
       AuthenticationManipulator.loginUser(context, _email, _password);
     }
   }
+
   void forgotPassword(context) async {
-      _formKey.currentState.save();
-      print(_email);
-      AuthenticationManipulator.forgotPassword(context, _email);
+    _formKey.currentState.save();
+    print(_email);
+    AuthenticationManipulator.forgotPassword(context, _email);
   }
 
   void tryAutoSignIn(context) async {
