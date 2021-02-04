@@ -43,7 +43,7 @@ class ClientOrderItem extends StatelessWidget {
               _thisOrder.finished
                   ? Icons.check_box
                   : Icons.check_box_outline_blank,
-              color: Colors.green,
+              color: Theme.of(context).primaryColor,
             ),
           ],
         ));
