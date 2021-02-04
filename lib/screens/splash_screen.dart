@@ -20,8 +20,10 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        child: FlutterLogo(size: MediaQuery.of(context).size.height));
+      color: Colors.white,
+      child: Image.asset('assets/logo.png'),
+      height: MediaQuery.of(context).size.height,
+    );
   }
 
   void tryAutoSignIn(context) async {

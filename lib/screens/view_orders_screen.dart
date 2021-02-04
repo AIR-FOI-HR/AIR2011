@@ -222,7 +222,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                           side: BorderSide(
-                              width: 3, color: Theme.of(context).accentColor)),
+                              width: 3, color: Theme.of(context).primaryColor)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -234,7 +234,6 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                           ),
                           icon: Icon(
                             Icons.filter_alt_sharp,
-                            color: Theme.of(context).accentColor,
                             size: 30,
                           ),
                           elevation: 24,
@@ -304,6 +303,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           Navigator.of(context).pushReplacementNamed(AddOrderScreen.routeName);
         },

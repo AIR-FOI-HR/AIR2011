@@ -37,12 +37,9 @@ class CustomAppbar extends StatelessWidget {
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
             }),
-        IconButton(
-            icon: Icon(Icons.logout),
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              AuthenticationManipulator.signOutUser(context);
-            }),
+        Tab(
+          icon: Image.asset('assets/logo.png'),
+        ),
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,

@@ -40,14 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).accentColor,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )),
+              color: Colors.white,
+            ),
           ),
           SingleChildScrollView(
             child: Container(
@@ -57,33 +51,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).accentColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black54,
-                          blurRadius: 10,
-                          offset: Offset(2, 2),
-                        )
-                      ],
+                  AnimatedContainer(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      filterQuality: FilterQuality.high,
                     ),
-                    child: Text(
-                      currentScreen == ScreenType.Login
-                          ? 'Login'
-                          : 'Registration',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    height: currentScreen == ScreenType.Login ? 230.0 : 150.0,
+                    duration: Duration(milliseconds: 100),
                   ),
-                  currentScreen == ScreenType.Login
-                      ? LoginCard(switchScreenType, _formKey)
-                      : SignupCard(switchScreenType, _formKey),
+                  AnimatedContainer(
+                    duration: Duration(seconds: 2),
+                    child: currentScreen == ScreenType.Login
+                        ? LoginCard(switchScreenType, _formKey)
+                        : SignupCard(switchScreenType, _formKey),
+                  )
                 ],
               ),
             ),
@@ -92,5 +73,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }
