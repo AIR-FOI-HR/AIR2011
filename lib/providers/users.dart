@@ -47,7 +47,7 @@ class Users with ChangeNotifier {
         await FirebaseFirestore.instance.collection('Administrator').get();
     for (var doc in querySnapshot.docs) {
       loadedUsers.add(AppUser(
-        id: doc.data()['ClientId'],
+        id: doc.id,
         email: doc.data()['Email'],
         name: doc.data()['Name'],
         surname: doc.data()['Surname'],
@@ -64,6 +64,7 @@ class Users with ChangeNotifier {
 
   AppUser getAdminById(String id) {
     //getting hardcoded users for now
-    return _users.firstWhere((user) => user.id == id);
+
+    return _admins.firstWhere((user) => user.id == id, orElse: () => null);
   }
 }

@@ -75,12 +75,6 @@ class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).pushReplacementNamed(AddOrderScreen.routeName);
-        },
-      ),
       drawer: AppDrawer(),
     );
   }

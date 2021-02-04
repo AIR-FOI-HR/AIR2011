@@ -54,13 +54,28 @@ class ForgottenCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                FlatButton(
+                  onPressed: () {
+                    //closes keyboard if not closed
+                    FocusScope.of(context).unfocus();
+                    changeScreenHandler("Login");
+                  },
+                  child: Text("Back"),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 3)),
                 )
               ],
             ),
           )),
     );
   }
-
 
   void forgotPassword(context) async {
     if (_formKey.currentState.validate()) {
