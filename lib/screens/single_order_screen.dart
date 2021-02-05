@@ -90,6 +90,20 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
         print(_orderInfo.total);
       }
     }
+    void completetionSwitch()
+    {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.finished = !_orderInfo.finished;
+        });
+       DatabaseManipulator.orderFinished(_orderInfo.id, _orderInfo.finished);
+       Provider.of<Orders>(context, listen: false).fetchOrders();
+
+
+
+      }
+    }
 
     void updateOrder() async {
       // print(_orderInfo.id);
@@ -367,8 +381,8 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           minWidth: 100,
                         ),
                         FlatButton(
-                          onPressed: () {},
-                          child: Text('Done',
+                          onPressed: () { completetionSwitch();},
+                          child: Text(_orderInfo.finished ? 'Undone' : 'Done' ,
                               style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 20)),

@@ -1,4 +1,6 @@
+import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/providers/app_user.dart';
+import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -26,8 +28,9 @@ class OrderItem extends StatelessWidget {
             actions: [
               FlatButton(
                   onPressed: () {
-                    //Need to implement delete functionality
-                    //Right now prints buyer's surname
+                    DatabaseManipulator.removeOrder(_thisOrder.id);
+                    Provider.of<Orders>(context, listen: false)
+                              .fetchOrders();
                     debugPrint(_buyer.surname);
                     Navigator.of(context).pop();
                   },
@@ -48,13 +51,6 @@ class OrderItem extends StatelessWidget {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.20,
       actions: [
-        IconSlideAction(
-          caption: 'Edit',
-          color: Theme.of(context).accentColor,
-          icon: Icons.edit,
-          //Need to add onTap functionality
-          onTap: () => null,
-        ),
         IconSlideAction(
           caption: 'Delete',
           color: Theme.of(context).errorColor,

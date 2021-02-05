@@ -61,10 +61,11 @@ class DatabaseManipulator with ChangeNotifier {
       'finished': order.finished,
     }).then((value) => print("Order has been updated"));
   }
-static void orderFinished(Order order) {
+  
+static void orderFinished(String uid, bool finished) {
     CollectionReference orders = FirebaseFirestore.instance.collection('Order');
-    orders.doc(order.id).update({
-      'finished': !order.finished,
+    orders.doc(uid).update({
+      'finished': finished,
     }).then((value) => print("Order has been updated"));
   }
   static Future<void> addTokenToUser(String userId) async {
