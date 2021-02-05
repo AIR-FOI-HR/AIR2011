@@ -63,40 +63,67 @@ class OrderItem extends StatelessWidget {
         )
       ],
       child: ListTile(
-          onTap: () {
-            //argument UserType will be taken out from logged in user
-            Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
-                arguments: [_thisOrder, UserType.Admin]);
-          },
-          leading: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Date', style: Theme.of(context).textTheme.subtitle1),
-              Container(
-                margin: EdgeInsets.only(top: 2),
-                child: Text(
-                    DateFormat('dd/MM/yyyy').format(_thisOrder.orderDate),
-                    style: Theme.of(context).textTheme.caption),
+        onTap: () {
+          //argument UserType will be taken out from logged in user
+          Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
+              arguments: [_thisOrder, UserType.Admin]);
+        },
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Finished',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  Icon(
+                    _thisOrder.finished
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: Theme.of(context).primaryColor,
+                    size: 17,
+                  ),
+                ],
               ),
+            ),
+            Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Date', style: Theme.of(context).textTheme.subtitle2),
+                  Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Text(
+                        DateFormat('dd/MM/yyyy').format(_thisOrder.orderDate),
+                        style: Theme.of(context).textTheme.caption),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        title: Text('Buyer', style: Theme.of(context).textTheme.subtitle2),
+        subtitle: Text('${_buyer.name} ${_buyer.surname}',
+            style: Theme.of(context).textTheme.caption),
+        trailing: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'HRK',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+              Text('${_thisOrder.total.toString()}',
+                  style: Theme.of(context).textTheme.caption),
             ],
           ),
-          title: Text('Buyer'),
-          subtitle: Text('${_buyer.name} ${_buyer.surname}'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _thisOrder.finished
-                    ? Icons.check_box
-                    : Icons.check_box_outline_blank,
-                color: Colors.green,
-              ),
-              Icon(
-                Icons.notifications,
-                color: Theme.of(context).accentColor,
-              )
-            ],
-          )),
+        ),
+      ),
     );
   }
 }

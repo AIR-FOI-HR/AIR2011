@@ -45,12 +45,21 @@ class AuthenticationManipulator with ChangeNotifier {
     final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
     DatabaseManipulator.removeTokenFromUser(_loggedUserUid);
 
-    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    await FirebaseAuth.instance.signOut();
 
     //deleting user info from phone
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
+  }
+  static Future<void> forgotPassword(context,email) async {
+    //unlinking fcm token from user
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((value) => 
+      {
+         Navigator.of(context)
+                .pushReplacementNamed(LoginScreen.routeName)
+      }
+    );
   }
 
   static Future<void> loginUser(context, email, password) async {

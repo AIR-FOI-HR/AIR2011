@@ -6,6 +6,23 @@ import 'package:flutter/services.dart';
 import '../screens/view_orders_screen.dart';
 
 class SignupCard extends StatelessWidget {
+  InputDecoration _textFieldDecoration(
+      String text, BuildContext context, Icon icon) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.all(15),
+      labelText: text,
+      prefixIcon: icon,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor),
+      ),
+    );
+  }
+
   final Function changeScreenHandler;
   final GlobalKey<FormState> _formKey;
   SignupCard(this.changeScreenHandler, this._formKey);
@@ -15,11 +32,11 @@ class SignupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-      elevation: 6,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          padding: EdgeInsets.only(left: 10, right: 10, top: 1, bottom: 10),
           child: Form(
             key: _formKey,
             child: Column(
@@ -28,7 +45,8 @@ class SignupCard extends StatelessWidget {
                   height: 10,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Name"),
+                  decoration:
+                      _textFieldDecoration("Name", context, Icon(Icons.person)),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -38,8 +56,12 @@ class SignupCard extends StatelessWidget {
                   },
                   onSaved: (input) => _name = input,
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Surname"),
+                  decoration: _textFieldDecoration(
+                      "Surname", context, Icon(Icons.person_outline)),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter your name.';
@@ -48,8 +70,12 @@ class SignupCard extends StatelessWidget {
                   },
                   onSaved: (input) => _surname = input,
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "E-Mail"),
+                  decoration: _textFieldDecoration(
+                      "E-Mail", context, Icon(Icons.email)),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
@@ -59,8 +85,12 @@ class SignupCard extends StatelessWidget {
                   },
                   onSaved: (input) => _email = input,
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Password"),
+                  decoration: _textFieldDecoration(
+                      "Password", context, Icon(Icons.lock)),
                   obscureText: true,
                   onSaved: (input) => _password_first = input,
                   validator: (value) {
@@ -70,8 +100,12 @@ class SignupCard extends StatelessWidget {
                     return null;
                   },
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: "Confirm password"),
+                  decoration: _textFieldDecoration(
+                      "Confirm password", context, Icon(Icons.lock_outline)),
                   obscureText: true,
                   onSaved: (input) => _password_second = input,
                   validator: (value) {
@@ -104,17 +138,17 @@ class SignupCard extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                RaisedButton(
+                FlatButton(
                   onPressed: () {
-                    changeScreenHandler();
+                    changeScreenHandler("Login");
                   },
                   child: Text("Login instead"),
-                  textColor: Theme.of(context).accentColor,
+                  textColor: Theme.of(context).primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                       side: BorderSide(
-                          color: Theme.of(context).accentColor, width: 3)),
+                          color: Theme.of(context).primaryColor, width: 3)),
                 ),
               ],
             ),

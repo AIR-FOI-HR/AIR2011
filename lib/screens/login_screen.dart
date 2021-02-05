@@ -1,9 +1,10 @@
 import 'package:air_2011/screens/view_orders_screen.dart';
+import 'package:air_2011/widgets/forgotten_password_card.dart';
 import 'package:air_2011/widgets/login_card.dart';
 import '../widgets/signup_card.dart';
 import 'package:flutter/material.dart';
 
-enum ScreenType { Login, Signup }
+enum ScreenType { Login, Signup, Forgotten }
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -16,17 +17,30 @@ class _LoginScreenState extends State<LoginScreen> {
   ScreenType currentScreen = ScreenType.Login;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
+  Widget checkCurrentScreen() {
+    if (currentScreen == ScreenType.Login)
+      return LoginCard(switchScreenType, _formKey);
+    else if (currentScreen == ScreenType.Signup)
+      return SignupCard(switchScreenType, _formKey);
+    else
+      return ForgottenCard(switchScreenType, _formKey);
+  }
+
   /*Function for switching between Login screen
     and Signup/Registration screen
   */
-  void switchScreenType() {
-    if (currentScreen == ScreenType.Login) {
+  void switchScreenType(String nameOfScreen) {
+    if (nameOfScreen == "Login") {
+      setState(() {
+        currentScreen = ScreenType.Login;
+      });
+    } else if (nameOfScreen == "Registration") {
       setState(() {
         currentScreen = ScreenType.Signup;
       });
     } else {
       setState(() {
-        currentScreen = ScreenType.Login;
+        currentScreen = ScreenType.Forgotten;
       });
     }
   }
@@ -40,14 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).accentColor,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )),
+              color: Colors.white,
+            ),
           ),
           SingleChildScrollView(
             child: Container(
@@ -57,33 +65,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).accentColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black54,
-                          blurRadius: 10,
-                          offset: Offset(2, 2),
-                        )
-                      ],
+                  AnimatedContainer(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      filterQuality: FilterQuality.high,
                     ),
-                    child: Text(
-                      currentScreen == ScreenType.Login
-                          ? 'Login'
-                          : 'Registration',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    height: currentScreen == ScreenType.Login ||
+                            currentScreen == ScreenType.Forgotten
+                        ? 230.0
+                        : 150.0,
+                    duration: Duration(milliseconds: 100),
                   ),
-                  currentScreen == ScreenType.Login
-                      ? LoginCard(switchScreenType, _formKey)
-                      : SignupCard(switchScreenType, _formKey),
+                  Container(
+                    child: checkCurrentScreen(),
+                  ),
                 ],
               ),
             ),
@@ -92,5 +87,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }

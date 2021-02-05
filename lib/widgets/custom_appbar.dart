@@ -18,6 +18,7 @@ class CustomAppbar extends StatelessWidget {
     Future<void> _getUsers() async {
       if (!built) {
         await Provider.of<Users>(context, listen: false).fetchClients();
+        await Provider.of<Users>(context, listen: false).fetchAdministrator();
         built = true;
       }
     }
@@ -36,12 +37,9 @@ class CustomAppbar extends StatelessWidget {
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
             }),
-        IconButton(
-            icon: Icon(Icons.logout),
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              AuthenticationManipulator.signOutUser(context);
-            }),
+        Tab(
+          icon: Image.asset('assets/logo.png'),
+        ),
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,

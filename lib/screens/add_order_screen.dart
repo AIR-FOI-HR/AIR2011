@@ -352,13 +352,13 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: Text(
                           'Save',
                           style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               fontSize: 20),
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide(
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).primaryColor,
                                 width: 3)),
                         height: 50,
                         minWidth: 100,
