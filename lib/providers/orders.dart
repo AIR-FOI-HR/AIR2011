@@ -73,12 +73,13 @@ class Orders with ChangeNotifier {
         await FirebaseFirestore.instance.collection('Order').get();
     for (var doc in querySnapshot.docs) {
       loadedOrders.add(Order(
-        id : doc.id,
+        id: doc.id,
         buyer: doc.data()['buyer'],
         worker: doc.data()['worker'],
         height: double.tryParse(doc.data()['height'].toString()),
         width: double.tryParse(doc.data()['width'].toString()),
-        orderDate: DateTime.now(),
+        orderDate:
+            DateTime.parse((doc.data()['orderDate'].toDate().toString())),
         passpartoutGlass: doc.data()['passpartoutGlass'],
         priceFrameOne: double.tryParse(doc.data()['priceFrameOne'].toString()),
         priceFrameTwo: double.tryParse(doc.data()['priceFrameTwo'].toString()),
@@ -89,39 +90,43 @@ class Orders with ChangeNotifier {
             double.tryParse(doc.data()['spaceFrameThree'].toString()),
         total: double.tryParse(doc.data()['total'].toString()),
         finished: doc.data()['finished'],
+        isPaid: doc.data()['isPaid'],
       ));
     }
     _orders = loadedOrders;
     notifyListeners();
   }
+
   Future<void> fetchUserOrders(userid) async {
     List<Order> loadedOrders = [];
     _orders.clear();
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Order').get();
     for (var doc in querySnapshot.docs) {
-      if(doc.data()['buyer'] == userid )
-      {
+      if (doc.data()['buyer'] == userid) {
         loadedOrders.add(Order(
-          id : doc.id,
-        buyer: doc.data()['buyer'],
-        worker: doc.data()['worker'],
-        height: double.tryParse(doc.data()['height'].toString()),
-        width: double.tryParse(doc.data()['width'].toString()),
-        orderDate: DateTime.now(),
-        passpartoutGlass: doc.data()['passpartoutGlass'],
-        priceFrameOne: double.tryParse(doc.data()['priceFrameOne'].toString()),
-        priceFrameTwo: double.tryParse(doc.data()['priceFrameTwo'].toString()),
-        spaceFrameTwo: double.tryParse(doc.data()['spaceFrameTwo'].toString()),
-        priceFrameThree:
-            double.tryParse(doc.data()['priceFrameThree'].toString()),
-        spaceFrameThree:
-            double.tryParse(doc.data()['spaceFrameThree'].toString()),
-        total: double.tryParse(doc.data()['total'].toString()),
-        finished: doc.data()['finished'],
-      ));
+          id: doc.id,
+          buyer: doc.data()['buyer'],
+          worker: doc.data()['worker'],
+          height: double.tryParse(doc.data()['height'].toString()),
+          width: double.tryParse(doc.data()['width'].toString()),
+          orderDate: DateTime.now(),
+          passpartoutGlass: doc.data()['passpartoutGlass'],
+          priceFrameOne:
+              double.tryParse(doc.data()['priceFrameOne'].toString()),
+          priceFrameTwo:
+              double.tryParse(doc.data()['priceFrameTwo'].toString()),
+          spaceFrameTwo:
+              double.tryParse(doc.data()['spaceFrameTwo'].toString()),
+          priceFrameThree:
+              double.tryParse(doc.data()['priceFrameThree'].toString()),
+          spaceFrameThree:
+              double.tryParse(doc.data()['spaceFrameThree'].toString()),
+          total: double.tryParse(doc.data()['total'].toString()),
+          finished: doc.data()['finished'],
+          isPaid: doc.data()['isPaid'],
+        ));
       }
-      
     }
     _orders = loadedOrders;
     notifyListeners();

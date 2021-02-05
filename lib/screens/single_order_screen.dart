@@ -52,7 +52,6 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
     final args = ModalRoute.of(context).settings.arguments as List;
     Order _orderInfo = args[0];
 
-    final UserType _loggedInUserType = args[1];
     final deviceSize = MediaQuery.of(context).size;
 
     final _usersData = Provider.of<Users>(context, listen: false);
@@ -88,6 +87,28 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
         });
 
         print(_orderInfo.total);
+      }
+    }
+
+    void completetionSwitch() {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.finished = !_orderInfo.finished;
+        });
+        DatabaseManipulator.orderFinished(_orderInfo.id, _orderInfo.finished);
+        Provider.of<Orders>(context, listen: false).fetchOrders();
+      }
+    }
+
+    void paidSwitch() {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.isPaid = !_orderInfo.isPaid;
+        });
+        DatabaseManipulator.orderPaid(_orderInfo.id, _orderInfo.isPaid);
+        Provider.of<Orders>(context, listen: false).fetchOrders();
       }
     }
 
@@ -339,7 +360,10 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         Text(
                           //doesn't calculate right now, just takes total from DB
                           'Total:${_orderInfo.total == null ? "0" : _orderInfo.total}HRK',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.headline6.apply(
+                              color: _orderInfo.isPaid
+                                  ? Colors.green
+                                  : Colors.red),
                         ),
                       ]),
                   SizedBox(
@@ -367,8 +391,10 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           minWidth: 100,
                         ),
                         FlatButton(
-                          onPressed: () {},
-                          child: Text('Done',
+                          onPressed: () {
+                            completetionSwitch();
+                          },
+                          child: Text(_orderInfo.finished ? 'Undone' : 'Done',
                               style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 20)),
@@ -385,7 +411,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                     height: 10,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       FlatButton(
                         onPressed: () {
@@ -401,6 +427,25 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                               color: Theme.of(context).primaryColor,
                               fontSize: 20),
                         ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3)),
+                        height: 50,
+                        minWidth: 100,
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          paidSwitch();
+                        },
+                        child: Text(
+                          _orderInfo.isPaid ? 'Paid' : 'Not paid',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        color: _orderInfo.isPaid
+                            ? Colors.green
+                            : Theme.of(context).errorColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide(
