@@ -89,6 +89,8 @@ class Orders with ChangeNotifier {
             double.tryParse(doc.data()['spaceFrameThree'].toString()),
         total: double.tryParse(doc.data()['total'].toString()),
         finished: doc.data()['finished'],
+        isPaid: doc.data()['isPaid'],
+
       ));
     }
     _orders = loadedOrders;
@@ -119,6 +121,7 @@ class Orders with ChangeNotifier {
             double.tryParse(doc.data()['spaceFrameThree'].toString()),
         total: double.tryParse(doc.data()['total'].toString()),
         finished: doc.data()['finished'],
+        isPaid: doc.data()['isPaid'],
       ));
       }
       

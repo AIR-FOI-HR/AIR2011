@@ -42,6 +42,11 @@ class OrderItem extends StatelessWidget {
           );
         });
   }
+void _updateHandler(context)
+{
+  DatabaseManipulator.orderPaid(_thisOrder.id, !_thisOrder.isPaid);
+       Provider.of<Orders>(context, listen: false).fetchOrders();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,12 @@ class OrderItem extends StatelessWidget {
           color: Theme.of(context).errorColor,
           icon: Icons.delete,
           onTap: () => _deleteHandler(context, _buyer),
+        ),
+        IconSlideAction(
+          caption: _thisOrder.isPaid? "Unpay" : "Paid",
+          color: Theme.of(context).errorColor,
+          icon: Icons.delete,
+          onTap: () => _updateHandler(context),
         )
       ],
       child: ListTile(

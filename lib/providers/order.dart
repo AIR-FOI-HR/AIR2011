@@ -16,6 +16,7 @@ class Order {
   double priceFrameThree;
   double spaceFrameThree;
   double total;
+  bool isPaid;
 
   Order(
       {this.id,
@@ -31,5 +32,6 @@ class Order {
       this.priceFrameThree,
       this.spaceFrameTwo,
       this.spaceFrameThree,
-      this.total});
+      this.total,
+      this.isPaid = false});
 }

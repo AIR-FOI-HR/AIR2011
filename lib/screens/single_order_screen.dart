@@ -105,6 +105,20 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
       }
     }
 
+  void paidSwitch()
+    {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.isPaid = !_orderInfo.isPaid;
+        });
+       DatabaseManipulator.orderPaid(_orderInfo.id, _orderInfo.isPaid);
+       Provider.of<Orders>(context, listen: false).fetchOrders();
+
+
+
+      }
+    }
     void updateOrder() async {
       // print(_orderInfo.id);
       calculateSum();
@@ -411,6 +425,24 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         },
                         child: Text(
                           'Remove',
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 20),
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 3)),
+                        height: 50,
+                        minWidth: 100,
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          paidSwitch();
+                        },
+                        child: Text(
+                          _orderInfo.isPaid ? 'Unpaid' : 'Paid',
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 20),

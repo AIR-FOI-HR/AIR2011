@@ -34,6 +34,8 @@ class DatabaseManipulator with ChangeNotifier {
       'spaceFrameThree': order.spaceFrameThree,
       'total': order.total,
       'finished': order.finished,
+      'isPaid': order.isPaid,
+
     }).then((value) => print("A new order has been added"));
   }
 
@@ -59,6 +61,7 @@ class DatabaseManipulator with ChangeNotifier {
       'spaceFrameThree': order.spaceFrameThree,
       'total': order.total,
       'finished': order.finished,
+      'isPaid': order.isPaid,
     }).then((value) => print("Order has been updated"));
   }
   
@@ -66,6 +69,12 @@ static void orderFinished(String uid, bool finished) {
     CollectionReference orders = FirebaseFirestore.instance.collection('Order');
     orders.doc(uid).update({
       'finished': finished,
+    }).then((value) => print("Order has been updated"));
+  }
+  static void orderPaid(String uid, bool isPaid) {
+    CollectionReference orders = FirebaseFirestore.instance.collection('Order');
+    orders.doc(uid).update({
+      'isPaid': isPaid,
     }).then((value) => print("Order has been updated"));
   }
   static Future<void> addTokenToUser(String userId) async {
