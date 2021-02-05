@@ -1,8 +1,11 @@
+import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
+import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:air_2011/widgets/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../providers/users.dart';
 import 'package:footer/footer.dart';
@@ -20,38 +23,12 @@ class SingleOrderScreen extends StatefulWidget {
 class _SingleOrderScreenState extends State<SingleOrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Order _model = new Order();
-
   void initState() {
     super.initState();
     setUpNotificationSystem(context);
   }
 
   static bool necessaryFilled = false;
-  void calculateSum() {
-    if (_formKey.currentState.validate()) {
-      var surface = (_model.width / 100) * (_model.height / 100);
-      print(_model.width);
-      print(_model.height);
-      var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
-
-      _model.total = (volume * _model.passpartoutGlass * 90) +
-          (surface * _model.priceFrameOne);
-
-      if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
-        var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
-            ((_model.height - _model.spaceFrameTwo) / 100);
-        _model.total += tmpVol2 * _model.priceFrameTwo;
-      }
-      if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
-        var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
-            ((_model.height - _model.spaceFrameThree) / 100);
-        _model.total += tmpVol3 * _model.priceFrameThree;
-      }
-      _model.total = double.parse(_model.total.toStringAsFixed(2));
-      print(_model.total);
-    }
-  }
 
   //Function returns empty string or real value depending on
   //variable value in Order so we won't have null values in
@@ -73,12 +50,56 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List;
-    final Order _orderInfo = args[0];
+    Order _orderInfo = args[0];
+
     final UserType _loggedInUserType = args[1];
     final deviceSize = MediaQuery.of(context).size;
 
     final _usersData = Provider.of<Users>(context, listen: false);
     final AppUser _buyer = _usersData.getUserById(_orderInfo.buyer);
+
+    void calculateSum() {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        var surface = (_orderInfo.width / 100) * (_orderInfo.height / 100);
+        print(_orderInfo.width);
+        print(_orderInfo.height);
+        var volume =
+            2 * (_orderInfo.width / 100) + 2 * (_orderInfo.height / 100);
+
+        _orderInfo.total = (volume * _orderInfo.passpartoutGlass * 90) +
+            (surface * _orderInfo.priceFrameOne);
+
+        if (_orderInfo.spaceFrameTwo != null &&
+            _orderInfo.priceFrameTwo != null) {
+          var tmpVol2 = ((_orderInfo.width - _orderInfo.spaceFrameTwo) / 100) *
+              ((_orderInfo.height - _orderInfo.spaceFrameTwo) / 100);
+          _orderInfo.total += tmpVol2 * _orderInfo.priceFrameTwo;
+        }
+        if (_orderInfo.spaceFrameThree != null &&
+            _orderInfo.priceFrameThree != null) {
+          var tmpVol3 =
+              ((_orderInfo.width - _orderInfo.spaceFrameThree) / 100) *
+                  ((_orderInfo.height - _orderInfo.spaceFrameThree) / 100);
+          _orderInfo.total += tmpVol3 * _orderInfo.priceFrameThree;
+        }
+        setState(() {
+          _orderInfo.total = double.parse(_orderInfo.total.toStringAsFixed(2));
+        });
+
+        print(_orderInfo.total);
+      }
+    }
+
+    void updateOrder() async {
+      // print(_orderInfo.id);
+      calculateSum();
+      // _formKey.currentState.save();
+
+      DatabaseManipulator.updateOrder(_orderInfo);
+      Provider.of<Orders>(context, listen: false).fetchOrders();
+      // Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
+    }
 
     //Return custom InputDecoration for text fields
     InputDecoration _textFieldDecoration(String text) {
@@ -136,7 +157,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.height}",
                           onChanged: (input) =>
-                              _model.height = double.parse(input),
+                              _orderInfo.height = double.parse(input),
                         ),
                       ),
                       SizedBox(
@@ -148,7 +169,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.width}",
                           onChanged: (input) =>
-                              _model.width = double.parse(input),
+                              _orderInfo.width = double.parse(input),
                         ),
                       ),
                     ],
@@ -166,7 +187,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.passpartoutGlass}",
                           onChanged: (input) =>
-                              _model.passpartoutGlass = int.parse(input),
+                              _orderInfo.passpartoutGlass = int.parse(input),
                         ),
                       ),
                     ],
@@ -195,7 +216,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Price/m2"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
-                              _model.priceFrameOne = double.parse(input),
+                              _orderInfo.priceFrameOne = double.parse(input),
                           initialValue: "${_orderInfo.priceFrameOne}",
                         ),
                       ),
@@ -225,7 +246,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Space (cm)"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
-                              _model.spaceFrameTwo = double.parse(input),
+                              _orderInfo.spaceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameTwo)}",
                         ),
@@ -243,7 +264,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Price/m2"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
-                              _model.priceFrameTwo = double.parse(input),
+                              _orderInfo.priceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameTwo)}",
                         ),
@@ -274,7 +295,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Space (cm)"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
-                            _model.spaceFrameThree = double.parse(input),
+                            _orderInfo.spaceFrameThree = double.parse(input),
                             calculateSum()
                           },
                           initialValue:
@@ -294,7 +315,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Price/m2"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
-                            _model.priceFrameThree = double.parse(input),
+                            _orderInfo.priceFrameThree = double.parse(input),
                             calculateSum()
                           },
                           initialValue:
@@ -317,7 +338,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       children: [
                         Text(
                           //doesn't calculate right now, just takes total from DB
-                          'Total:${_orderInfo.total}HRK',
+                          'Total:${_orderInfo.total == null ? "0" : _orderInfo.total}HRK',
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ]),
@@ -330,7 +351,9 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         //TODO implement calculator
 
                         FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            updateOrder();
+                          },
                           child: Text('Update',
                               style: TextStyle(
                                   color: Theme.of(context).primaryColor,
@@ -366,7 +389,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                     children: [
                       FlatButton(
                         onPressed: () {
-                          calculateSum();
+                          DatabaseManipulator.removeOrder(_orderInfo.id);
+                          Provider.of<Orders>(context, listen: false)
+                              .fetchOrders();
+                          Navigator.pushReplacementNamed(
+                              context, ViewOrdersScreen.routeName);
                         },
                         child: Text(
                           'Remove',
