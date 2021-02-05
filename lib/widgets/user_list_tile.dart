@@ -1,3 +1,4 @@
+import 'package:air_2011/screens/user_order_list.dart';
 import 'package:flutter/material.dart';
 
 import '../providers/app_user.dart';
@@ -26,10 +27,8 @@ class UserListTile extends StatelessWidget {
         color: Theme.of(context).accentColor,
       ),
       onTap: () {
-        if (filterBuild) {
-          saveBuyer(_thisUser);
-          Navigator.pop(ctx);
-        }
+        Navigator.of(context).pushNamed(UserOrderList.routeName,
+            arguments: [_thisUser]);
       },
     );
   }
