@@ -73,6 +73,7 @@ class Orders with ChangeNotifier {
         await FirebaseFirestore.instance.collection('Order').get();
     for (var doc in querySnapshot.docs) {
       loadedOrders.add(Order(
+        id : doc.id,
         buyer: doc.data()['buyer'],
         worker: doc.data()['worker'],
         height: double.tryParse(doc.data()['height'].toString()),
@@ -102,6 +103,7 @@ class Orders with ChangeNotifier {
       if(doc.data()['buyer'] == userid )
       {
         loadedOrders.add(Order(
+          id : doc.id,
         buyer: doc.data()['buyer'],
         worker: doc.data()['worker'],
         height: double.tryParse(doc.data()['height'].toString()),

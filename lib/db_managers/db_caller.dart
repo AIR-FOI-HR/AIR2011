@@ -59,9 +59,14 @@ class DatabaseManipulator with ChangeNotifier {
       'spaceFrameThree': order.spaceFrameThree,
       'total': order.total,
       'finished': order.finished,
-    }).then((value) => print("A new order has been added"));
+    }).then((value) => print("Order has been updated"));
   }
-
+static void orderFinished(Order order) {
+    CollectionReference orders = FirebaseFirestore.instance.collection('Order');
+    orders.doc(order.id).update({
+      'finished': !order.finished,
+    }).then((value) => print("Order has been updated"));
+  }
   static Future<void> addTokenToUser(String userId) async {
     String fcmToken = await returnCurrentFcmToken();
     CollectionReference clients =
