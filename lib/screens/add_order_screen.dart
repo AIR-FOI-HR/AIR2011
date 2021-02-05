@@ -26,6 +26,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   static String id = "";
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  bool paid = false;
+
   Order _model = new Order();
   static bool necessaryFilled = false;
   void calculateSum() {
@@ -61,6 +63,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     final User user = auth.currentUser;
     final uid = user.uid;
     _model.worker = uid;
+    _model.isPaid = paid;
     DatabaseManipulator.addNewOrder(_model);
     Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
   }
@@ -343,26 +346,58 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       //TODO implement calculator
                       Text(
                         'Total:${_model.total == null ? "0" : _model.total} HRK',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            .apply(color: paid ? Colors.green : Colors.red),
                       ),
-                      FlatButton(
-                        onPressed: () {
-                          createNewOrder();
-                        },
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20),
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                                width: 3)),
-                        height: 50,
-                        minWidth: 100,
-                      )
+                      Column(
+                        children: [
+                          FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                paid = !paid;
+                              });
+                            },
+                            child: Text(
+                              paid ? 'Paid' : 'Not paid',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            color: paid
+                                ? Colors.green
+                                : Theme.of(context).errorColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 3)),
+                            height: 50,
+                            minWidth: 100,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              createNewOrder();
+                            },
+                            child: Text(
+                              'Save',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 20),
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 3)),
+                            height: 50,
+                            minWidth: 100,
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ],

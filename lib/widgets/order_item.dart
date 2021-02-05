@@ -29,8 +29,7 @@ class OrderItem extends StatelessWidget {
               FlatButton(
                   onPressed: () {
                     DatabaseManipulator.removeOrder(_thisOrder.id);
-                    Provider.of<Orders>(context, listen: false)
-                              .fetchOrders();
+                    Provider.of<Orders>(context, listen: false).fetchOrders();
                     debugPrint(_buyer.surname);
                     Navigator.of(context).pop();
                   },
@@ -42,11 +41,11 @@ class OrderItem extends StatelessWidget {
           );
         });
   }
-void _updateHandler(context)
-{
-  DatabaseManipulator.orderPaid(_thisOrder.id, !_thisOrder.isPaid);
-       Provider.of<Orders>(context, listen: false).fetchOrders();
-}
+
+  void _updateHandler(context) {
+    DatabaseManipulator.orderPaid(_thisOrder.id, !_thisOrder.isPaid);
+    Provider.of<Orders>(context, listen: false).fetchOrders();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +62,10 @@ void _updateHandler(context)
           onTap: () => _deleteHandler(context, _buyer),
         ),
         IconSlideAction(
-          caption: _thisOrder.isPaid? "Unpay" : "Paid",
-          color: Theme.of(context).errorColor,
-          icon: Icons.delete,
+          caption: _thisOrder.isPaid ? "Unpay" : "Pay",
+          color:
+              !_thisOrder.isPaid ? Theme.of(context).errorColor : Colors.green,
+          icon: Icons.payment,
           onTap: () => _updateHandler(context),
         )
       ],

@@ -75,7 +75,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List;
     final Order _orderInfo = args[0];
-    final UserType _loggedInUserType = args[1];
+
     final deviceSize = MediaQuery.of(context).size;
 
     final _usersData = Provider.of<Users>(context, listen: false);
@@ -321,21 +321,23 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                     indent: 10,
                     endIndent: 10,
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          //doesn't calculate right now, just takes total from DB
-                          'Total:${_orderInfo.total}HRK',
-                          style: Theme.of(context).textTheme.headline6,
+                          'Total: ${_orderInfo.total}HRK',
+                          style: Theme.of(context).textTheme.headline6.apply(
+                              color: _orderInfo.isPaid
+                                  ? Colors.green
+                                  : Colors.red),
                         ),
                       ]),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
-                  SizedBox(
-                    height: 10,
-                  )
                 ],
               ),
             )),
