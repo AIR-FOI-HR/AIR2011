@@ -60,12 +60,15 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   }
 
   void createNewOrder() async {
-    final User user = auth.currentUser;
-    final uid = user.uid;
-    _model.worker = uid;
-    _model.isPaid = paid;
-    DatabaseManipulator.addNewOrder(_model);
-    Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
+    if (_formKey.currentState.validate()) {
+      calculateSum();
+      final User user = auth.currentUser;
+      final uid = user.uid;
+      _model.worker = uid;
+      _model.isPaid = paid;
+      DatabaseManipulator.addNewOrder(_model);
+      Navigator.of(context).pushReplacementNamed(ViewOrdersScreen.routeName);
+    }
   }
 
   //We need to check if the first build happen
@@ -139,6 +142,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                     decoration: _textFieldDecoration(
                       'Buyer',
                     ),
+                    validator: (value) {
+                            if (value == null) {
+                              return 'Please select a user.';
+                            }
+                            return null;
+                          },
                     items: _usersDropDownItems,
                     onChanged: (input) => _model.buyer = input,
                   ),
@@ -151,6 +160,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         child: TextFormField(
                           decoration: _textFieldDecoration("Height"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter height.';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
                             _model.height = double.parse(input),
@@ -164,6 +179,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       Flexible(
                         child: TextFormField(
                             decoration: _textFieldDecoration("Width"),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter width.';
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.number,
                             onChanged: (input) => {
                                   _model.width = double.parse(input),
@@ -182,6 +203,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                             decoration:
                                 _textFieldDecoration("Passpart / Glass Qty"),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter qty.';
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.number,
                             onChanged: (input) => {
                                   _model.passpartoutGlass = int.parse(input),
@@ -228,6 +255,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         fit: FlexFit.loose,
                         child: TextFormField(
                             decoration: _textFieldDecoration("Price/m2"),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter price of main frame.';
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.number,
                             onChanged: (input) => {
                                   _model.priceFrameOne = double.parse(input),
