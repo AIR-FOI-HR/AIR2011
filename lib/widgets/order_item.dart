@@ -62,7 +62,7 @@ class OrderItem extends StatelessWidget {
           onTap: () => _deleteHandler(context, _buyer),
         ),
         IconSlideAction(
-          caption: _thisOrder.isPaid ? "Unpay" : "Pay",
+          caption: _thisOrder.isPaid ? "Paid" : "Not paid",
           color:
               !_thisOrder.isPaid ? Theme.of(context).errorColor : Colors.green,
           icon: Icons.payment,
@@ -126,7 +126,8 @@ class OrderItem extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Text('${_thisOrder.total.toString()}',
-                  style: Theme.of(context).textTheme.caption),
+                  style: Theme.of(context).textTheme.caption.apply(
+                      color: _thisOrder.isPaid ? Colors.green : Colors.red)),
             ],
           ),
         ),

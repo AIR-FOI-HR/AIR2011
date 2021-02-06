@@ -161,4 +161,18 @@ class Orders with ChangeNotifier {
     _filteredOrders.clear();
     _filteredOrders = filteredOrders;
   }
+
+  Future<void> filterByPaid() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => !element.isPaid);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
+
+  Future<void> filterByNotPaid() async {
+    List<Order> filteredOrders = _orders.toList();
+    filteredOrders.removeWhere((element) => element.isPaid);
+    _filteredOrders.clear();
+    _filteredOrders = filteredOrders;
+  }
 }
