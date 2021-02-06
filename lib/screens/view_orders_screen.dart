@@ -267,9 +267,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                               itemBuilder: (_, i) => Column(
                                 children: [
                                   //Dodaj filter
-                                  OrderItem(_filterState == FilterState.NoFilter
-                                      ? orderData.allOrders[i]
-                                      : orderData.filteredOrders[i]),
+                                  _filterState == FilterState.NoFilter
+                                      ? OrderItem(orderData.allOrders[i])
+                                      : OrderItem.filter(
+                                          orderData.filteredOrders[i],
+                                          _filterState),
                                   Divider()
                                 ],
                               ),

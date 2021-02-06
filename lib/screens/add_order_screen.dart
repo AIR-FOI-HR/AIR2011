@@ -31,31 +31,28 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   Order _model = new Order();
   static bool necessaryFilled = false;
   void calculateSum() {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      if (_model.width != null &&
-          _model.height != null &&
-          _model.priceFrameOne != null) {
-        var surface = (_model.width / 100) * (_model.height / 100);
-        var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
-        _model.total = (volume * _model.priceFrameOne);
-        if (_model.passpartoutGlass != null && _model.passpartoutGlass != 0) {
-          _model.total += (surface * _model.passpartoutGlass * 90);
-        }
-
-        if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
-          var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
-              ((_model.height - _model.spaceFrameTwo) / 100);
-          _model.total += tmpVol2 * _model.priceFrameTwo;
-        }
-        if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
-          var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
-              ((_model.height - _model.spaceFrameThree) / 100);
-          _model.total += tmpVol3 * _model.priceFrameThree;
-        }
-        _model.total = double.parse(_model.total.toStringAsFixed(2));
-        print(_model.total);
+    _formKey.currentState.save();
+    if (_model.width != null &&
+        _model.height != null &&
+        _model.priceFrameOne != null) {
+      var surface = (_model.width / 100) * (_model.height / 100);
+      var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
+      _model.total = (volume * _model.priceFrameOne);
+      if (_model.passpartoutGlass != null && _model.passpartoutGlass != 0) {
+        _model.total += (surface * _model.passpartoutGlass * 90);
       }
+
+      if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
+        var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
+            ((_model.height - _model.spaceFrameTwo) / 100);
+        _model.total += tmpVol2 * _model.priceFrameTwo;
+      }
+      if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
+        var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
+            ((_model.height - _model.spaceFrameThree) / 100);
+        _model.total += tmpVol3 * _model.priceFrameThree;
+      }
+      _model.total = double.parse(_model.total.toStringAsFixed(2));
     }
   }
 
@@ -143,11 +140,11 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       'Buyer',
                     ),
                     validator: (value) {
-                            if (value == null) {
-                              return 'Please select a user.';
-                            }
-                            return null;
-                          },
+                      if (value == null) {
+                        return 'Please select a user.';
+                      }
+                      return null;
+                    },
                     items: _usersDropDownItems,
                     onChanged: (input) => _model.buyer = input,
                   ),
