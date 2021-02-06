@@ -6,6 +6,7 @@ import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:air_2011/widgets/drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import '../providers/users.dart';
 import 'package:footer/footer.dart';
@@ -22,6 +23,7 @@ class SingleOrderScreen extends StatefulWidget {
 
 class _SingleOrderScreenState extends State<SingleOrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AppUser _buyer;
 
   void initState() {
     super.initState();
@@ -55,7 +57,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
     final deviceSize = MediaQuery.of(context).size;
 
     final _usersData = Provider.of<Users>(context, listen: false);
-    final AppUser _buyer = _usersData.getUserById(_orderInfo.buyer);
+    _buyer = _usersData.getUserById(_orderInfo.buyer);
 
     void calculateSum() {
       if (_formKey.currentState.validate()) {
@@ -97,6 +99,9 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
           _orderInfo.finished = !_orderInfo.finished;
         });
         DatabaseManipulator.orderFinished(_orderInfo.id, _orderInfo.finished);
+        if (_orderInfo.finished) {
+          sendNotification(_buyer);
+        }
         Provider.of<Orders>(context, listen: false).fetchOrders();
       }
     }
