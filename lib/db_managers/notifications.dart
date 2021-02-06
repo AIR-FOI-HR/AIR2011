@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:air_2011/providers/app_user.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -42,26 +43,34 @@ void setUpNotificationSystem(BuildContext context) {
   });
 }
 
-Future sendNotification(String title, String body, String token) async {
-  await http.post(
-    'https://fcm.googleapis.com/fcm/send',
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'key=$serverToken',
-    },
-    body: jsonEncode(
-      <String, dynamic>{
-        'notification': <String, dynamic>{'body': body, 'title': title},
-        'priority': 'high',
-        'data': <String, dynamic>{
-          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-          'id': '1',
-          'status': 'done'
-        },
-        'to': token,
+Future<void> sendNotification(AppUser buyer) async {
+  if (buyer.fcmToken != null && buyer.fcmToken != "") {
+    String token = buyer.fcmToken;
+
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$serverToken',
       },
-    ),
-  );
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body':
+                'Your order has been finshed, come when you are ready to pick it up',
+            'title': 'Order finished'
+          },
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done'
+          },
+          'to': token,
+        },
+      ),
+    );
+  }
 }
 
 Future<String> returnCurrentFcmToken() async {

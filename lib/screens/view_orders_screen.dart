@@ -13,7 +13,16 @@ import '../widgets/drawer.dart';
 import '../providers/users.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-enum FilterState { NoState, NoFilter, Completed, NotCompleted, Buyer, Date }
+enum FilterState {
+  NoState,
+  NoFilter,
+  Completed,
+  NotCompleted,
+  Buyer,
+  Date,
+  Paid,
+  NotPaid
+}
 
 class ViewOrdersScreen extends StatefulWidget {
   static const routeName = 'orders-screen';
@@ -50,6 +59,12 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
       case FilterState.Buyer:
         await Provider.of<Orders>(context, listen: false)
             .filterByBuyer(filterBuyer);
+        break;
+      case FilterState.NotPaid:
+        await Provider.of<Orders>(context, listen: false).filterByNotPaid();
+        break;
+      case FilterState.Paid:
+        await Provider.of<Orders>(context, listen: false).filterByPaid();
         break;
       default:
         await Provider.of<Orders>(context, listen: false).fetchOrders();
@@ -154,6 +169,12 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
             });
           }
           break;
+        case "Not Paid":
+          _filterState = FilterState.NotPaid;
+          break;
+        case "Paid":
+          _filterState = FilterState.Paid;
+          break;
         case "No filter":
           _filterState = FilterState.NoFilter;
           break;
@@ -204,7 +225,9 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                             'Date',
                             'Buyer',
                             'Not Completed',
-                            'Completed'
+                            'Completed',
+                            'Not Paid',
+                            'Paid'
                           ].map<DropdownMenuItem<String>>((String e) {
                             return DropdownMenuItem<String>(
                               value: e,
@@ -244,9 +267,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                               itemBuilder: (_, i) => Column(
                                 children: [
                                   //Dodaj filter
-                                  OrderItem(_filterState == FilterState.NoFilter
-                                      ? orderData.allOrders[i]
-                                      : orderData.filteredOrders[i]),
+                                  _filterState == FilterState.NoFilter
+                                      ? OrderItem(orderData.allOrders[i])
+                                      : OrderItem.filter(
+                                          orderData.filteredOrders[i],
+                                          _filterState),
                                   Divider()
                                 ],
                               ),

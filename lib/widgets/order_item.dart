@@ -3,6 +3,7 @@ import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
+import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,9 +14,11 @@ import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
   final Order _thisOrder;
+  FilterState state = FilterState.NoFilter;
 
   //final AppUser _loggedUser;
   OrderItem(this._thisOrder);
+  OrderItem.filter(this._thisOrder, this.state);
 
 //Handles what happens if the delete button has been clicked
   Future<void> _deleteHandler(context, _buyer) {
@@ -30,6 +33,10 @@ class OrderItem extends StatelessWidget {
                   onPressed: () {
                     DatabaseManipulator.removeOrder(_thisOrder.id);
                     Provider.of<Orders>(context, listen: false).fetchOrders();
+                    if (state != FilterState.NoFilter) {
+                      Provider.of<Orders>(context, listen: false)
+                          .refreshFilteredOrders();
+                    }
                     debugPrint(_buyer.surname);
                     Navigator.of(context).pop();
                   },
@@ -42,9 +49,12 @@ class OrderItem extends StatelessWidget {
         });
   }
 
-  void _updateHandler(context) {
+  Future<void> _updateHandler(context) async {
     DatabaseManipulator.orderPaid(_thisOrder.id, !_thisOrder.isPaid);
     Provider.of<Orders>(context, listen: false).fetchOrders();
+    if (state != FilterState.NoFilter) {
+      Provider.of<Orders>(context, listen: false).refreshFilteredOrders();
+    }
   }
 
   @override
@@ -62,7 +72,7 @@ class OrderItem extends StatelessWidget {
           onTap: () => _deleteHandler(context, _buyer),
         ),
         IconSlideAction(
-          caption: _thisOrder.isPaid ? "Unpay" : "Pay",
+          caption: _thisOrder.isPaid ? "Paid" : "Not paid",
           color:
               !_thisOrder.isPaid ? Theme.of(context).errorColor : Colors.green,
           icon: Icons.payment,
@@ -126,7 +136,8 @@ class OrderItem extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Text('${_thisOrder.total.toString()}',
-                  style: Theme.of(context).textTheme.caption),
+                  style: Theme.of(context).textTheme.caption.apply(
+                      color: _thisOrder.isPaid ? Colors.green : Colors.red)),
             ],
           ),
         ),

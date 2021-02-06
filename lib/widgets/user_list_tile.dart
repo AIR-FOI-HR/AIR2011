@@ -24,11 +24,16 @@ class UserListTile extends StatelessWidget {
         _thisUser.userType == UserType.Admin
             ? Icons.admin_panel_settings
             : Icons.person,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).primaryColor,
       ),
       onTap: () {
-        Navigator.of(context).pushNamed(UserOrderList.routeName,
-            arguments: [_thisUser]);
+        if (filterBuild) {
+          saveBuyer(_thisUser);
+          Navigator.pop(ctx);
+        } else {
+          Navigator.of(context)
+              .pushNamed(UserOrderList.routeName, arguments: [_thisUser]);
+        }
       },
     );
   }
