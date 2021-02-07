@@ -135,7 +135,7 @@ class OrderItem extends StatelessWidget {
                 'HRK',
                 style: Theme.of(context).textTheme.subtitle2,
               ),
-              Text('${_thisOrder.total.toString()}',
+              Text('${_thisOrder.total.toStringAsFixed(2)}',
                   style: Theme.of(context).textTheme.caption.apply(
                       color: _thisOrder.isPaid ? Colors.green : Colors.red)),
             ],

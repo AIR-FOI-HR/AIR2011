@@ -364,7 +364,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       children: [
                         Text(
                           //doesn't calculate right now, just takes total from DB
-                          'Total:${_orderInfo.total == null ? "0" : _orderInfo.total}HRK',
+                          'Total:${_orderInfo.total == null ? "0.00" : _orderInfo.total.toStringAsFixed(2)}HRK',
                           style: Theme.of(context).textTheme.headline6.apply(
                               color: _orderInfo.isPaid
                                   ? Colors.green
