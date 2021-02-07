@@ -1,13 +1,6 @@
-import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
-import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/orders.dart';
-import 'package:air_2011/screens/view_orders_screen.dart';
-import 'package:air_2011/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import '../providers/users.dart';
-import 'package:footer/footer.dart';
-import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
 
 import 'client-screens/client_order_tile.dart';
@@ -52,7 +45,7 @@ class _UserOrderListState extends State<UserOrderList> {
                 : Column(
                     children: [
                       Container(
-                          height: deviceSize.height - 200,
+                          height: deviceSize.height - 250,
                           decoration: BoxDecoration(
                               border: Border.all(
                                   color: Theme.of(context).dividerColor),
@@ -76,8 +69,7 @@ class _UserOrderListState extends State<UserOrderList> {
                       Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
-                            Row(
-                                children: [
+                            Row(children: [
                               Text('Total to pay ',
                                   style: Theme.of(context).textTheme.subtitle2),
                               Text(
