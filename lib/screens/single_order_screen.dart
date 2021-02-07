@@ -68,8 +68,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
         var volume =
             2 * (_orderInfo.width / 100) + 2 * (_orderInfo.height / 100);
 
-        _orderInfo.total = (volume * _orderInfo.passpartoutGlass * 90) +
-            (surface * _orderInfo.priceFrameOne);
+        _orderInfo.total = (volume * _orderInfo.priceFrameOne);
+        if (_orderInfo.passpartoutGlass != null &&
+            _orderInfo.passpartoutGlass != 0) {
+          _orderInfo.total += (surface * _orderInfo.passpartoutGlass * 90);
+        }
 
         if (_orderInfo.spaceFrameTwo != null &&
             _orderInfo.priceFrameTwo != null) {
