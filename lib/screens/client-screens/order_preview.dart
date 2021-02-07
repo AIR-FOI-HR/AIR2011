@@ -1,11 +1,8 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/users.dart';
-import 'package:air_2011/screens/view_orders_screen.dart';
-import 'package:air_2011/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:footer/footer.dart';
-import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
 
 class SingleOrderClientScreen extends StatefulWidget {
@@ -13,7 +10,8 @@ class SingleOrderClientScreen extends StatefulWidget {
   //static Users _usersData = Users();
 
   @override
-  _SingleOrderClientScreenState createState() => _SingleOrderClientScreenState();
+  _SingleOrderClientScreenState createState() =>
+      _SingleOrderClientScreenState();
 }
 
 class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
@@ -21,7 +19,11 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
 
   Order _model = new Order();
 
-  static bool necessaryFilled = false;
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
+  }
+
   void calculateSum() {
     if (_formKey.currentState.validate()) {
       var surface = (_model.width / 100) * (_model.height / 100);
@@ -68,7 +70,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List;
     final Order _orderInfo = args[0];
-    final UserType _loggedInUserType = args[1];
+
     final deviceSize = MediaQuery.of(context).size;
 
     final _usersData = Provider.of<Users>(context, listen: false);
@@ -131,7 +133,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           initialValue: "${_orderInfo.height}",
                           onChanged: (input) =>
                               _model.height = double.parse(input),
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                       SizedBox(
@@ -145,7 +147,6 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           onChanged: (input) =>
                               _model.width = double.parse(input),
                           readOnly: true,
-
                         ),
                       ),
                     ],
@@ -166,7 +167,6 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.passpartoutGlass = int.parse(input),
                           readOnly: true,
                         ),
-                      
                       ),
                     ],
                   ),
@@ -228,7 +228,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.spaceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameTwo)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -247,7 +247,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                               _model.priceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameTwo)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -281,7 +281,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameThree)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -302,7 +302,7 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameThree)}",
-                              readOnly: true,
+                          readOnly: true,
                         ),
                       ),
                     ],
@@ -316,21 +316,23 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
                     indent: 10,
                     endIndent: 10,
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          //doesn't calculate right now, just takes total from DB
-                          'Total:${_orderInfo.total}HRK',
-                          style: Theme.of(context).textTheme.headline6,
+                          'Total: ${_orderInfo.total}HRK',
+                          style: Theme.of(context).textTheme.headline6.apply(
+                              color: _orderInfo.isPaid
+                                  ? Colors.green
+                                  : Colors.red),
                         ),
                       ]),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
-                  SizedBox(
-                    height: 10,
-                  )
                 ],
               ),
             )),

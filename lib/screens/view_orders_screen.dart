@@ -1,18 +1,25 @@
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
-import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../widgets/drawer.dart';
 import '../providers/users.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
-enum FilterState { NoState, NoFilter, Completed, NotCompleted, Buyer, Date }
+enum FilterState {
+  NoState,
+  NoFilter,
+  Completed,
+  NotCompleted,
+  Buyer,
+  Date,
+  Paid,
+  NotPaid
+}
 
 class ViewOrdersScreen extends StatefulWidget {
   static const routeName = 'orders-screen';
@@ -26,48 +33,8 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
 
   @override
   void initState() {
-    final FirebaseMessaging fbm = FirebaseMessaging();
-    //FirebaseMessaging messaging = new FirebaseMessaging.instance;
-    String _homeScreenText;
     super.initState();
-
-    fbm.autoInitEnabled().then((bool autoInit) {
-      debugPrint('AUTOINIT ENABLED: $autoInit');
-    });
-
-    fbm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: ListTile(
-                    title: Text(message['notification']['title']),
-                    subtitle: Text(message['notification']['body']),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Ok'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
-                  ],
-                ));
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-
-    fbm.getToken().then((String token) {
-      assert(token != null);
-      setState(() {
-        _homeScreenText = "Push Messaging token: $token";
-      });
-      print(_homeScreenText);
-    });
+    setUpNotificationSystem(context);
   }
 
   Future<void> _fetch(BuildContext context, FilterState filterState) async {
@@ -89,6 +56,12 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
       case FilterState.Buyer:
         await Provider.of<Orders>(context, listen: false)
             .filterByBuyer(filterBuyer);
+        break;
+      case FilterState.NotPaid:
+        await Provider.of<Orders>(context, listen: false).filterByNotPaid();
+        break;
+      case FilterState.Paid:
+        await Provider.of<Orders>(context, listen: false).filterByPaid();
         break;
       default:
         await Provider.of<Orders>(context, listen: false).fetchOrders();
@@ -193,6 +166,12 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
             });
           }
           break;
+        case "Not Paid":
+          _filterState = FilterState.NotPaid;
+          break;
+        case "Paid":
+          _filterState = FilterState.Paid;
+          break;
         case "No filter":
           _filterState = FilterState.NoFilter;
           break;
@@ -222,7 +201,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                           side: BorderSide(
-                              width: 3, color: Theme.of(context).accentColor)),
+                              width: 3, color: Theme.of(context).primaryColor)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -234,7 +213,6 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                           ),
                           icon: Icon(
                             Icons.filter_alt_sharp,
-                            color: Theme.of(context).accentColor,
                             size: 30,
                           ),
                           elevation: 24,
@@ -244,7 +222,9 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                             'Date',
                             'Buyer',
                             'Not Completed',
-                            'Completed'
+                            'Completed',
+                            'Not Paid',
+                            'Paid'
                           ].map<DropdownMenuItem<String>>((String e) {
                             return DropdownMenuItem<String>(
                               value: e,
@@ -284,9 +264,11 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
                               itemBuilder: (_, i) => Column(
                                 children: [
                                   //Dodaj filter
-                                  OrderItem(_filterState == FilterState.NoFilter
-                                      ? orderData.allOrders[i]
-                                      : orderData.filteredOrders[i]),
+                                  _filterState == FilterState.NoFilter
+                                      ? OrderItem(orderData.allOrders[i])
+                                      : OrderItem.filter(
+                                          orderData.filteredOrders[i],
+                                          _filterState),
                                   Divider()
                                 ],
                               ),
@@ -304,6 +286,7 @@ class _ViewOrdersScreenState extends State<ViewOrdersScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           Navigator.of(context).pushReplacementNamed(AddOrderScreen.routeName);
         },

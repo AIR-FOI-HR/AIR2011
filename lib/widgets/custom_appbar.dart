@@ -1,9 +1,4 @@
-import 'package:air_2011/db_managers/authentication.dart';
-import 'package:air_2011/providers/app_user.dart';
-import 'package:air_2011/screens/login_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/users.dart';
@@ -18,6 +13,7 @@ class CustomAppbar extends StatelessWidget {
     Future<void> _getUsers() async {
       if (!built) {
         await Provider.of<Users>(context, listen: false).fetchClients();
+        await Provider.of<Users>(context, listen: false).fetchAdministrator();
         built = true;
       }
     }
@@ -36,12 +32,9 @@ class CustomAppbar extends StatelessWidget {
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
             }),
-        IconButton(
-            icon: Icon(Icons.logout),
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              AuthenticationManipulator.signOutUser(context);
-            }),
+        Tab(
+          icon: Image.asset('assets/logo.png'),
+        ),
         CircleAvatar(
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,

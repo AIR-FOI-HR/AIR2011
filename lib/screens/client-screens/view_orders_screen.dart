@@ -1,4 +1,4 @@
-import 'package:air_2011/screens/add_order_screen.dart';
+import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/screens/client-screens/client_order_tile.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +17,12 @@ class ViewOrdersScreenClient extends StatefulWidget {
 class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
   //Used to access scaffold to open a drawer from custom appbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<void> _fetch() async {
@@ -67,12 +73,6 @@ class _ViewOrdersScreenClient extends State<ViewOrdersScreenClient> {
             )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).pushReplacementNamed(AddOrderScreen.routeName);
-        },
       ),
       drawer: AppDrawer(),
     );

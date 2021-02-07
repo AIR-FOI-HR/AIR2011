@@ -1,3 +1,4 @@
+import 'package:air_2011/screens/user_order_list.dart';
 import 'package:flutter/material.dart';
 
 import '../providers/app_user.dart';
@@ -23,12 +24,15 @@ class UserListTile extends StatelessWidget {
         _thisUser.userType == UserType.Admin
             ? Icons.admin_panel_settings
             : Icons.person,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).primaryColor,
       ),
       onTap: () {
         if (filterBuild) {
           saveBuyer(_thisUser);
           Navigator.pop(ctx);
+        } else {
+          Navigator.of(context)
+              .pushNamed(UserOrderList.routeName, arguments: [_thisUser]);
         }
       },
     );

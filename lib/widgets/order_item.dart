@@ -1,6 +1,8 @@
+import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/providers/app_user.dart';
-import 'package:air_2011/screens/add_order_screen.dart';
+import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
+import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,9 +13,11 @@ import '../providers/order.dart';
 
 class OrderItem extends StatelessWidget {
   final Order _thisOrder;
+  FilterState state = FilterState.NoFilter;
 
   //final AppUser _loggedUser;
   OrderItem(this._thisOrder);
+  OrderItem.filter(this._thisOrder, this.state);
 
 //Handles what happens if the delete button has been clicked
   Future<void> _deleteHandler(context, _buyer) {
@@ -26,8 +30,12 @@ class OrderItem extends StatelessWidget {
             actions: [
               FlatButton(
                   onPressed: () {
-                    //Need to implement delete functionality
-                    //Right now prints buyer's surname
+                    DatabaseManipulator.removeOrder(_thisOrder.id);
+                    Provider.of<Orders>(context, listen: false).fetchOrders();
+                    if (state != FilterState.NoFilter) {
+                      Provider.of<Orders>(context, listen: false)
+                          .refreshFilteredOrders();
+                    }
                     debugPrint(_buyer.surname);
                     Navigator.of(context).pop();
                   },
@@ -40,6 +48,14 @@ class OrderItem extends StatelessWidget {
         });
   }
 
+  Future<void> _updateHandler(context) async {
+    DatabaseManipulator.orderPaid(_thisOrder.id, !_thisOrder.isPaid);
+    Provider.of<Orders>(context, listen: false).fetchOrders();
+    if (state != FilterState.NoFilter) {
+      Provider.of<Orders>(context, listen: false).refreshFilteredOrders();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final _usersData = Provider.of<Users>(context, listen: false);
@@ -49,54 +65,82 @@ class OrderItem extends StatelessWidget {
       actionExtentRatio: 0.20,
       actions: [
         IconSlideAction(
-          caption: 'Edit',
-          color: Theme.of(context).accentColor,
-          icon: Icons.edit,
-          //Need to add onTap functionality
-          onTap: () => null,
-        ),
-        IconSlideAction(
           caption: 'Delete',
           color: Theme.of(context).errorColor,
           icon: Icons.delete,
           onTap: () => _deleteHandler(context, _buyer),
+        ),
+        IconSlideAction(
+          caption: _thisOrder.isPaid ? "Paid" : "Not paid",
+          color:
+              !_thisOrder.isPaid ? Theme.of(context).errorColor : Colors.green,
+          icon: Icons.payment,
+          onTap: () => _updateHandler(context),
         )
       ],
       child: ListTile(
-          onTap: () {
-            //argument UserType will be taken out from logged in user
-            Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
-                arguments: [_thisOrder, UserType.Admin]);
-          },
-          leading: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Date', style: Theme.of(context).textTheme.subtitle1),
-              Container(
-                margin: EdgeInsets.only(top: 2),
-                child: Text(
-                    DateFormat('dd/MM/yyyy').format(_thisOrder.orderDate),
-                    style: Theme.of(context).textTheme.caption),
+        onTap: () {
+          //argument UserType will be taken out from logged in user
+          Navigator.of(context).pushNamed(SingleOrderScreen.routeName,
+              arguments: [_thisOrder, UserType.Admin]);
+        },
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Finished',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  Icon(
+                    _thisOrder.finished
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: Theme.of(context).primaryColor,
+                    size: 17,
+                  ),
+                ],
               ),
+            ),
+            Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Date', style: Theme.of(context).textTheme.subtitle2),
+                  Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Text(
+                        DateFormat('dd/MM/yyyy').format(_thisOrder.orderDate),
+                        style: Theme.of(context).textTheme.caption),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        title: Text('Buyer', style: Theme.of(context).textTheme.subtitle2),
+        subtitle: Text('${_buyer.name} ${_buyer.surname}',
+            style: Theme.of(context).textTheme.caption),
+        trailing: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'HRK',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+              Text('${_thisOrder.total.toStringAsFixed(2)}',
+                  style: Theme.of(context).textTheme.caption.apply(
+                      color: _thisOrder.isPaid ? Colors.green : Colors.red)),
             ],
           ),
-          title: Text('Buyer'),
-          subtitle: Text('${_buyer.name} ${_buyer.surname}'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _thisOrder.finished
-                    ? Icons.check_box
-                    : Icons.check_box_outline_blank,
-                color: Colors.green,
-              ),
-              Icon(
-                Icons.notifications,
-                color: Theme.of(context).accentColor,
-              )
-            ],
-          )),
+        ),
+      ),
     );
   }
 }

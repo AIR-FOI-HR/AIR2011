@@ -6,12 +6,15 @@ import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/single_order_screen.dart';
 import 'package:air_2011/screens/splash_screen.dart';
+import 'package:air_2011/screens/user_order_list.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './providers/users.dart';
 import './providers/orders.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -38,23 +43,64 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'GKMApp',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primaryColor: Colors.black,
           accentColor: Colors.deepOrangeAccent,
+          scaffoldBackgroundColor: Colors.white,
           textTheme: TextTheme(
-            button: TextStyle(
-              fontSize: 16,
-            ),
-          ),
+              button: TextStyle(
+                fontSize: 16,
+              ),
+              subtitle2: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              caption: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         ),
         home: SplashScreen(),
-        routes: {
-          ViewOrdersScreen.routeName: (ctx) => ViewOrdersScreen(),
-          ViewOrdersScreenClient.routeName: (ctx) => ViewOrdersScreenClient(),
-          SingleOrderClientScreen.routeName: (ctx) => SingleOrderClientScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          AddOrderScreen.routeName: (ctx) => AddOrderScreen(),
-          RegisteredUsersOverview.routeName: (ctx) => RegisteredUsersOverview(),
-          SingleOrderScreen.routeName: (ctx) => SingleOrderScreen()
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case 'orders-screen':
+              return PageTransition(
+                  child: ViewOrdersScreen(),
+                  type: PageTransitionType.bottomToTop);
+              break;
+            case '/login':
+              return PageTransition(
+                  child: LoginScreen(), type: PageTransitionType.topToBottom);
+              break;
+            case 'orders-screen-client':
+              return PageTransition(
+                  child: ViewOrdersScreenClient(),
+                  type: PageTransitionType.bottomToTop);
+              break;
+            case 'single-order-client':
+              return PageTransition(
+                  child: SingleOrderClientScreen(),
+                  type: PageTransitionType.leftToRight,
+                  settings: settings);
+              break;
+            case 'add-order':
+              return PageTransition(
+                  child: AddOrderScreen(),
+                  type: PageTransitionType.rightToLeft);
+              break;
+            case 'registered-users':
+              return PageTransition(
+                  child: RegisteredUsersOverview(),
+                  type: PageTransitionType.leftToRight);
+              break;
+            case 'user-order-list':
+              return PageTransition(
+                  child: UserOrderList(),
+                  type: PageTransitionType.leftToRight,
+                  settings: settings);
+              break;
+            case 'single-order':
+              return PageTransition(
+                  child: SingleOrderScreen(),
+                  type: PageTransitionType.leftToRight,
+                  settings: settings);
+              break;
+            default:
+              return null;
+          }
         },
       ),
     );

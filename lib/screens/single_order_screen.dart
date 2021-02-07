@@ -1,11 +1,12 @@
+import 'package:air_2011/db_managers/db_caller.dart';
+import 'package:air_2011/db_managers/notifications.dart';
+import 'package:air_2011/helper/calculate.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
+import 'package:air_2011/providers/orders.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
-import 'package:air_2011/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import '../providers/users.dart';
-import 'package:footer/footer.dart';
-import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
 
 class SingleOrderScreen extends StatefulWidget {
@@ -18,33 +19,11 @@ class SingleOrderScreen extends StatefulWidget {
 
 class _SingleOrderScreenState extends State<SingleOrderScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AppUser _buyer;
 
-  Order _model = new Order();
-
-  static bool necessaryFilled = false;
-  void calculateSum() {
-    if (_formKey.currentState.validate()) {
-      var surface = (_model.width / 100) * (_model.height / 100);
-      print(_model.width);
-      print(_model.height);
-      var volume = 2 * (_model.width / 100) + 2 * (_model.height / 100);
-
-      _model.total = (volume * _model.passpartoutGlass * 90) +
-          (surface * _model.priceFrameOne);
-
-      if (_model.spaceFrameTwo != null && _model.priceFrameTwo != null) {
-        var tmpVol2 = ((_model.width - _model.spaceFrameTwo) / 100) *
-            ((_model.height - _model.spaceFrameTwo) / 100);
-        _model.total += tmpVol2 * _model.priceFrameTwo;
-      }
-      if (_model.spaceFrameThree != null && _model.priceFrameThree != null) {
-        var tmpVol3 = ((_model.width - _model.spaceFrameThree) / 100) *
-            ((_model.height - _model.spaceFrameThree) / 100);
-        _model.total += tmpVol3 * _model.priceFrameThree;
-      }
-      _model.total = double.parse(_model.total.toStringAsFixed(2));
-      print(_model.total);
-    }
+  void initState() {
+    super.initState();
+    setUpNotificationSystem(context);
   }
 
   //Function returns empty string or real value depending on
@@ -67,12 +46,54 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments as List;
-    final Order _orderInfo = args[0];
-    final UserType _loggedInUserType = args[1];
-    final deviceSize = MediaQuery.of(context).size;
+    Order _orderInfo = args[0];
 
+    final deviceSize = MediaQuery.of(context).size;
+    final Calculator calc = new Calculator();
     final _usersData = Provider.of<Users>(context, listen: false);
-    final AppUser _buyer = _usersData.getUserById(_orderInfo.buyer);
+    _buyer = _usersData.getUserById(_orderInfo.buyer);
+
+    void calculateSum() {
+      _formKey.currentState.save();
+
+      setState(() {
+        _orderInfo.total = calc.calculateSum(_orderInfo);
+      });
+    }
+
+    void completetionSwitch() {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.finished = !_orderInfo.finished;
+        });
+        DatabaseManipulator.orderFinished(_orderInfo.id, _orderInfo.finished);
+        if (_orderInfo.finished) {
+          sendNotification(_buyer);
+        }
+        Provider.of<Orders>(context, listen: false).fetchOrders();
+      }
+    }
+
+    void paidSwitch() {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _orderInfo.isPaid = !_orderInfo.isPaid;
+        });
+        DatabaseManipulator.orderPaid(_orderInfo.id, _orderInfo.isPaid);
+        Provider.of<Orders>(context, listen: false).fetchOrders();
+      }
+    }
+
+    void updateOrder() async {
+      if (_formKey.currentState.validate()) {
+        calculateSum();
+
+        DatabaseManipulator.updateOrder(_orderInfo);
+        Provider.of<Orders>(context, listen: false).fetchOrders();
+      }
+    }
 
     //Return custom InputDecoration for text fields
     InputDecoration _textFieldDecoration(String text) {
@@ -95,8 +116,6 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
       _wasFirstBuild = true;
     }
 
-    //bool _isCheckedBorder = false;
-    //bool _isCheckedPass = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -127,10 +146,16 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       Flexible(
                         child: TextFormField(
                           decoration: _textFieldDecoration("Height"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter height.';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.height}",
                           onChanged: (input) =>
-                              _model.height = double.parse(input),
+                              _orderInfo.height = double.parse(input),
                         ),
                       ),
                       SizedBox(
@@ -139,10 +164,16 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       Flexible(
                         child: TextFormField(
                           decoration: _textFieldDecoration("Width"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter width.';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.width}",
                           onChanged: (input) =>
-                              _model.width = double.parse(input),
+                              _orderInfo.width = double.parse(input),
                         ),
                       ),
                     ],
@@ -157,10 +188,16 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         child: TextFormField(
                           decoration:
                               _textFieldDecoration("Passpart / Glass Qty"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter qty.';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           initialValue: "${_orderInfo.passpartoutGlass}",
                           onChanged: (input) =>
-                              _model.passpartoutGlass = int.parse(input),
+                              _orderInfo.passpartoutGlass = int.parse(input),
                         ),
                       ),
                     ],
@@ -187,9 +224,15 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         fit: FlexFit.loose,
                         child: TextFormField(
                           decoration: _textFieldDecoration("Price/m2"),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter price of main frame.';
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
-                              _model.priceFrameOne = double.parse(input),
+                              _orderInfo.priceFrameOne = double.parse(input),
                           initialValue: "${_orderInfo.priceFrameOne}",
                         ),
                       ),
@@ -217,9 +260,19 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         fit: FlexFit.loose,
                         child: TextFormField(
                           decoration: _textFieldDecoration("Space (cm)"),
+                          validator: (value) {
+                            if (_orderInfo.priceFrameTwo != null) {
+                              if (double.parse(value) >= _orderInfo.width ||
+                                  double.parse(value) >= _orderInfo.height ||
+                                  double.parse(value) < 0) {
+                                return 'The value is invalid!';
+                              }
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           onChanged: (input) =>
-                              _model.spaceFrameTwo = double.parse(input),
+                              _orderInfo.spaceFrameTwo = double.parse(input),
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameTwo)}",
                         ),
@@ -236,8 +289,12 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         child: TextFormField(
                           decoration: _textFieldDecoration("Price/m2"),
                           keyboardType: TextInputType.number,
-                          onChanged: (input) =>
-                              _model.priceFrameTwo = double.parse(input),
+                          onChanged: (input) => {
+                            if (input.isEmpty)
+                              {_orderInfo.priceFrameTwo = null}
+                            else
+                              {_orderInfo.priceFrameTwo = double.parse(input)}
+                          },
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameTwo)}",
                         ),
@@ -266,10 +323,19 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                         fit: FlexFit.loose,
                         child: TextFormField(
                           decoration: _textFieldDecoration("Space (cm)"),
+                          validator: (value) {
+                            if (_orderInfo.priceFrameThree != null) {
+                              if ((double.parse(value)) >= _orderInfo.width ||
+                                  double.parse(value) >= _orderInfo.height ||
+                                  double.parse(value) < 0) {
+                                return 'The value is invalid!';
+                              }
+                            }
+                            return null;
+                          },
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
-                            _model.spaceFrameThree = double.parse(input),
-                            calculateSum()
+                            _orderInfo.spaceFrameThree = double.parse(input),
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameThree)}",
@@ -288,8 +354,7 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           decoration: _textFieldDecoration("Price/m2"),
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
-                            _model.priceFrameThree = double.parse(input),
-                            calculateSum()
+                            _orderInfo.priceFrameThree = double.parse(input),
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameThree)}",
@@ -310,9 +375,11 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          //doesn't calculate right now, just takes total from DB
-                          'Total:${_orderInfo.total}HRK',
-                          style: Theme.of(context).textTheme.headline6,
+                          'Total:${_orderInfo.total == null ? "0.00" : _orderInfo.total.toStringAsFixed(2)}HRK',
+                          style: Theme.of(context).textTheme.headline6.apply(
+                              color: _orderInfo.isPaid
+                                  ? Colors.green
+                                  : Colors.red),
                         ),
                       ]),
                   SizedBox(
@@ -321,32 +388,34 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        //TODO implement calculator
-
                         FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            updateOrder();
+                          },
                           child: Text('Update',
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                   fontSize: 20)),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                               side: BorderSide(
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                   width: 3)),
                           height: 50,
                           minWidth: 100,
                         ),
                         FlatButton(
-                          onPressed: () {},
-                          child: Text('Done',
+                          onPressed: () {
+                            completetionSwitch();
+                          },
+                          child: Text(_orderInfo.finished ? 'Undone' : 'Done',
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                   fontSize: 20)),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                               side: BorderSide(
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                   width: 3)),
                           height: 50,
                           minWidth: 100,
@@ -356,22 +425,45 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                     height: 10,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       FlatButton(
                         onPressed: () {
-                          calculateSum();
+                          DatabaseManipulator.removeOrder(_orderInfo.id);
+                          Provider.of<Orders>(context, listen: false)
+                              .fetchOrders();
+                          Navigator.pushReplacementNamed(
+                              context, ViewOrdersScreen.routeName);
                         },
                         child: Text(
                           'Remove',
                           style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               fontSize: 20),
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide(
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).primaryColor,
+                                width: 3)),
+                        height: 50,
+                        minWidth: 100,
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          paidSwitch();
+                        },
+                        child: Text(
+                          _orderInfo.isPaid ? 'Paid' : 'Not paid',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        color: _orderInfo.isPaid
+                            ? Colors.green
+                            : Theme.of(context).errorColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
                                 width: 3)),
                         height: 50,
                         minWidth: 100,
