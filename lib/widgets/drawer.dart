@@ -4,7 +4,6 @@ import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/registered_users_overview.dart';
 import 'package:air_2011/screens/view_orders_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +14,9 @@ class AppDrawer extends StatelessWidget {
   bool built = false;
   @override
   Widget build(BuildContext context) {
-    String _tmpId =  "";
-    if(FirebaseAuth.instance.currentUser != null)
-    {
-      _tmpId =  FirebaseAuth.instance.currentUser.uid;
+    String _tmpId = "";
+    if (FirebaseAuth.instance.currentUser != null) {
+      _tmpId = FirebaseAuth.instance.currentUser.uid;
     }
     final String _loggedUserUid = _tmpId;
     final AppUser _loggedUser =

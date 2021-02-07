@@ -2,11 +2,7 @@ import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/users.dart';
-import 'package:air_2011/screens/view_orders_screen.dart';
-import 'package:air_2011/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:footer/footer.dart';
-import 'package:footer/footer_view.dart';
 import 'package:provider/provider.dart';
 
 class SingleOrderClientScreen extends StatefulWidget {
@@ -28,7 +24,6 @@ class _SingleOrderClientScreenState extends State<SingleOrderClientScreen> {
     setUpNotificationSystem(context);
   }
 
-  static bool necessaryFilled = false;
   void calculateSum() {
     if (_formKey.currentState.validate()) {
       var surface = (_model.width / 100) * (_model.height / 100);

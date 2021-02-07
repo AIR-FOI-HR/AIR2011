@@ -3,7 +3,6 @@ import 'package:air_2011/providers/users.dart';
 import 'package:air_2011/widgets/drawer.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
 import 'package:flutter/material.dart';
-import '../screens/view_orders_screen.dart';
 import 'package:provider/provider.dart';
 
 class RegisteredUsersOverview extends StatelessWidget {

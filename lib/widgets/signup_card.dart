@@ -1,9 +1,6 @@
 import 'package:air_2011/db_managers/authentication.dart';
-import 'package:air_2011/providers/app_user.dart';
-import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../screens/view_orders_screen.dart';
 
 class SignupCard extends StatelessWidget {
   InputDecoration _textFieldDecoration(

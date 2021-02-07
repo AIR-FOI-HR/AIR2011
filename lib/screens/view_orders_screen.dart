@@ -1,17 +1,14 @@
 import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
-import 'package:air_2011/screens/login_screen.dart';
 import 'package:air_2011/widgets/custom_appbar.dart';
 import 'package:air_2011/widgets/order_item.dart';
 import 'package:air_2011/widgets/user_list_tile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/orders.dart';
 import '../widgets/drawer.dart';
 import '../providers/users.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 enum FilterState {
   NoState,

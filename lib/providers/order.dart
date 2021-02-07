@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'app_user.dart';
-
 class Order {
   String id;
   DateTime orderDate;

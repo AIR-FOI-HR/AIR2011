@@ -31,15 +31,13 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   bool paid = false;
 
   Order _model = new Order();
-  static bool necessaryFilled = false;
   void calculateSum() {
     _formKey.currentState.save();
-      if (_model.width != null &&
-          _model.height != null &&
-          _model.priceFrameOne != null) {
-        _model.total = calc.calculateSum(_model);
-      }
-    
+    if (_model.width != null &&
+        _model.height != null &&
+        _model.priceFrameOne != null) {
+      _model.total = calc.calculateSum(_model);
+    }
   }
 
   void createNewOrder() async {
@@ -275,20 +273,18 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                             decoration: _textFieldDecoration("Space (cm)"),
                             validator: (value) {
-                              if(_model.priceFrameTwo != null)
-                              {
-                                // return 'Dumbass';
-                                if (double.parse(value) >= _model.width || double.parse(value) >= _model.height || double.parse(value) < 0) {
+                              if (_model.priceFrameTwo != null) {
+                                if (double.parse(value) >= _model.width ||
+                                    double.parse(value) >= _model.height ||
+                                    double.parse(value) < 0) {
                                   return 'The value is invalid!';
                                 }
                               }
-                                
-
                               return null;
                             },
                             keyboardType: TextInputType.number,
                             onChanged: (input) => {
-                               _model.spaceFrameTwo = double.parse(input),
+                                  _model.spaceFrameTwo = double.parse(input),
                                   calculateSum()
                                 }),
                       ),
@@ -305,12 +301,12 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                             decoration: _textFieldDecoration("Price/m2"),
                             keyboardType: TextInputType.number,
                             onChanged: (input) => {
-                                  if(input.isEmpty)
-                                  {
-                                    _model.priceFrameTwo = null
-                                  }else{
-                                     _model.priceFrameTwo = double.parse(input)
-                                  },
+                                  if (input.isEmpty)
+                                    {_model.priceFrameTwo = null}
+                                  else
+                                    {
+                                      _model.priceFrameTwo = double.parse(input)
+                                    },
                                   calculateSum()
                                 }),
                       ),
@@ -339,14 +335,13 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                         child: TextFormField(
                             decoration: _textFieldDecoration("Space (cm)"),
                             validator: (value) {
-                              if(_model.priceFrameThree != null)
-                              {
-                                // return 'Dumbass';
-                                if ((double.parse(value)) >= _model.width || double.parse(value) >= _model.height || double.parse(value) < 0) {
+                              if (_model.priceFrameThree != null) {
+                                if ((double.parse(value)) >= _model.width ||
+                                    double.parse(value) >= _model.height ||
+                                    double.parse(value) < 0) {
                                   return 'The value is invalid!';
                                 }
                               }
-                                
 
                               return null;
                             },
@@ -388,7 +383,6 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      //TODO implement calculator
                       Text(
                         'Total:${_model.total == null ? "0" : _model.total} HRK',
                         style: Theme.of(context)

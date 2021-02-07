@@ -1,11 +1,9 @@
 import 'package:air_2011/db_managers/notifications.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
-import 'package:air_2011/providers/users.dart';
 import 'package:air_2011/screens/client-screens/order_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class ClientOrderItem extends StatelessWidget {
   final Order _thisOrder;
