@@ -1,5 +1,6 @@
 import 'package:air_2011/db_managers/db_caller.dart';
 import 'package:air_2011/db_managers/notifications.dart';
+import 'package:air_2011/helper/calculate.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/providers/order.dart';
 import 'package:air_2011/providers/orders.dart';
@@ -55,43 +56,16 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
     Order _orderInfo = args[0];
 
     final deviceSize = MediaQuery.of(context).size;
-
+    final Calculator calc = new Calculator();
     final _usersData = Provider.of<Users>(context, listen: false);
     _buyer = _usersData.getUserById(_orderInfo.buyer);
 
     void calculateSum() {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        var surface = (_orderInfo.width / 100) * (_orderInfo.height / 100);
-        print(_orderInfo.width);
-        print(_orderInfo.height);
-        var volume =
-            2 * (_orderInfo.width / 100) + 2 * (_orderInfo.height / 100);
-
-        _orderInfo.total = (volume * _orderInfo.priceFrameOne);
-        if (_orderInfo.passpartoutGlass != null &&
-            _orderInfo.passpartoutGlass != 0) {
-          _orderInfo.total += (surface * _orderInfo.passpartoutGlass * 90);
-        }
-
-        if (_orderInfo.spaceFrameTwo != null &&
-            _orderInfo.priceFrameTwo != null) {
-          var tmpVol2 = ((_orderInfo.width - _orderInfo.spaceFrameTwo) / 100) *
-              ((_orderInfo.height - _orderInfo.spaceFrameTwo) / 100);
-          _orderInfo.total += tmpVol2 * _orderInfo.priceFrameTwo;
-        }
-        if (_orderInfo.spaceFrameThree != null &&
-            _orderInfo.priceFrameThree != null) {
-          var tmpVol3 =
-              ((_orderInfo.width - _orderInfo.spaceFrameThree) / 100) *
-                  ((_orderInfo.height - _orderInfo.spaceFrameThree) / 100);
-          _orderInfo.total += tmpVol3 * _orderInfo.priceFrameThree;
-        }
         setState(() {
-          _orderInfo.total = double.parse(_orderInfo.total.toStringAsFixed(2));
+          _orderInfo.total = calc.calculateSum(_orderInfo);
         });
-
-        print(_orderInfo.total);
       }
     }
 
@@ -325,7 +299,6 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
                             _orderInfo.spaceFrameThree = double.parse(input),
-                            calculateSum()
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.spaceFrameThree)}",
@@ -345,7 +318,6 @@ class _SingleOrderScreenState extends State<SingleOrderScreen> {
                           keyboardType: TextInputType.number,
                           onChanged: (input) => {
                             _orderInfo.priceFrameThree = double.parse(input),
-                            calculateSum()
                           },
                           initialValue:
                               "${checkIfNull(_orderInfo.priceFrameThree)}",
