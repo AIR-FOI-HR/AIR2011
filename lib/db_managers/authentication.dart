@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/db_caller.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'notifications.dart';
 
-class AuthenticationManipulator with ChangeNotifier {
+class AuthenticationManipulator with ChangeNotifier implements Authenticated  {
   static void showDialogBox(String title, String content, context) {
     showDialog(
       context: context,
@@ -32,8 +33,7 @@ class AuthenticationManipulator with ChangeNotifier {
     );
   }
 
-  static Future<void> signUpUser(
-      context, email, name, surname, password) async {
+  Future<void> signUpUser(context, email, name, surname, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
