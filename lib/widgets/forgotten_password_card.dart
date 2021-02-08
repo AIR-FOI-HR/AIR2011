@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,7 @@ class ForgottenCard extends StatelessWidget {
   /*Function handler for changing between
     Login screen and Registration/Signup screen
   */
-
+  IAuthenticate _auth = new AuthenticationManipulator();
   FirebaseAuth auth = FirebaseAuth.instance;
   final Function changeScreenHandler;
   final GlobalKey<FormState> _formKey;
@@ -79,7 +80,7 @@ class ForgottenCard extends StatelessWidget {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       print(_email);
-      AuthenticationManipulator.forgotPassword(context, _email);
+      _auth.forgotPassword(context, _email);
     }
   }
 }

@@ -25,8 +25,7 @@ class SignupCard extends StatelessWidget {
   final GlobalKey<FormState> _formKey;
   SignupCard(this.changeScreenHandler, this._formKey);
   String _name, _surname, _email, _password_first, _password_second;
-  Authenticated _authMain = new Authenticated();
-
+  IAuthenticate _authMain = new AuthenticationManipulator();
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +158,7 @@ class SignupCard extends StatelessWidget {
   void signUpTheUser(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      _authMain.signUpUser(
-          context, _email, _name, _surname, _password_second);
+      _authMain.signUpUser(context, _email, _name, _surname, _password_second);
     }
   }
 

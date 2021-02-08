@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreen extends State<SplashScreen> {
+  IAuthenticate _auth = new AuthenticationManipulator();
   @override
   void initState() {
     super.initState();
@@ -30,7 +32,8 @@ class _SplashScreen extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('userEmail') == true) {
       final prefs = await SharedPreferences.getInstance();
-      AuthenticationManipulator.loginUser(context, prefs.getString('userEmail'),
+
+      _auth.loginUser(context, prefs.getString('userEmail'),
           prefs.getString('userPassword'));
     } else {
       Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);

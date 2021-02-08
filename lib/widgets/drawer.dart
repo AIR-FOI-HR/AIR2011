@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
 import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
@@ -12,6 +13,7 @@ import '../providers/users.dart';
 class AppDrawer extends StatelessWidget {
   //bool isAdmin = false;
   bool built = false;
+  IAuthenticate _auth = new AuthenticationManipulator();
   @override
   Widget build(BuildContext context) {
     String _tmpId = "";
@@ -74,7 +76,7 @@ class AppDrawer extends StatelessWidget {
             ),
             title: Text('Log Out'),
             onTap: () {
-              AuthenticationManipulator.signOutUser(context);
+              _auth.signOutUser(context);
             },
           ),
           Divider(),
