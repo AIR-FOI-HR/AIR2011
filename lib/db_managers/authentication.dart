@@ -11,7 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'notifications.dart';
 
-class AuthenticationManipulator with ChangeNotifier implements Authenticated  {
+class AuthenticationManipulator with ChangeNotifier implements Authenticated {
   static void showDialogBox(String title, String content, context) {
     showDialog(
       context: context,
@@ -126,13 +126,5 @@ class AuthenticationManipulator with ChangeNotifier implements Authenticated  {
       showDialogBox('Wrong E-Mail or Password',
           'Please enter valid E-Mail or password', context);
     }
-  }
-
-  static Future<bool> isUserLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('userEmail') == true) {
-      return true;
-    }
-    return false;
   }
 }

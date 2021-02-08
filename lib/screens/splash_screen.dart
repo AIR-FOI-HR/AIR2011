@@ -26,8 +26,9 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   void tryAutoSignIn(context) async {
-    bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
-    if (userSignedIn) {
+    //bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('userEmail') == true) {
       final prefs = await SharedPreferences.getInstance();
       AuthenticationManipulator.loginUser(context, prefs.getString('userEmail'),
           prefs.getString('userPassword'));

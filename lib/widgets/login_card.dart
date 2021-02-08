@@ -131,6 +131,7 @@ class LoginCard extends StatelessWidget {
     AuthenticationManipulator.forgotPassword(context, _email);
   }
 
+  /*
   void tryAutoSignIn(context) async {
     bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
     if (userSignedIn) {
@@ -140,4 +141,5 @@ class LoginCard extends StatelessWidget {
       AuthenticationManipulator.loginUser(context, _email, _password);
     }
   }
+  */
 }
