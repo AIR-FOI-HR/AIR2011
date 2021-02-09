@@ -1,4 +1,6 @@
 import 'package:air_2011/db_managers/db_caller.dart';
+import 'package:air_2011/helper/dialog_shower.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/client-screens/view_orders_screen.dart';
 import 'package:air_2011/screens/login_screen.dart';
@@ -10,30 +12,9 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'notifications.dart';
 
-class AuthenticationManipulator with ChangeNotifier {
-  static void showDialogBox(String title, String content, context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            TextButton(
-              onPressed: () => title == 'Reset password E-Mail sent'
-                  ? Navigator.of(context)
-                      .pushReplacementNamed(LoginScreen.routeName)
-                  : Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  static Future<void> signUpUser(
-      context, email, name, surname, password) async {
+class AuthenticationManipulator implements IAuthenticate {
+  Future<void> signUpUser(context, email, name, surname, password) async {
+    print("Im here!");
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -54,18 +35,19 @@ class AuthenticationManipulator with ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        showDialogBox(
-            'Password too weak', 'Please enter stronger password', context);
+        DialogShower.showDialogBox('Password too weak',
+            'Please enter stronger password', context, null);
       } else if (e.code == 'email-already-in-use') {
-        showDialogBox(
+        DialogShower.showDialogBox(
             'E-Mail already in use',
             'This E-Mail is already in use. Please try another E-Mail address',
-            context);
+            context,
+            null);
       }
     }
   }
 
-  static Future<void> signOutUser(context) async {
+  Future<void> signOutUser(context) async {
     //unlinking fcm token from user
     final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
     DatabaseManipulator.removeTokenFromUser(_loggedUserUid);
@@ -78,22 +60,25 @@ class AuthenticationManipulator with ChangeNotifier {
     prefs.clear();
   }
 
-  static Future<void> forgotPassword(context, email) async {
+  Future<void> forgotPassword(context, email) async {
     //unlinking fcm token from user
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: email)
           .then((value) {
-        showDialogBox('Reset password E-Mail sent',
-            'Please check your E-Mail inbox to reset your password', context);
+        DialogShower.showDialogBox(
+            'Reset password E-Mail sent',
+            'Please check your E-Mail inbox to reset your password',
+            context,
+            LoginScreen.routeName);
       });
     } on FirebaseAuthException catch (e) {
-      showDialogBox('This E-Mail does not exist',
-          'Please enter existing E-Mail address', context);
+      DialogShower.showDialogBox('This E-Mail does not exist',
+          'Please enter existing E-Mail address', context, null);
     }
   }
 
-  static Future<void> loginUser(context, email, password) async {
+  Future<void> loginUser(context, email, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email.trim(), password: password);
@@ -123,16 +108,8 @@ class AuthenticationManipulator with ChangeNotifier {
         prefrences.setString('userPassword', password);
       }
     } on FirebaseAuthException catch (e) {
-      showDialogBox('Wrong E-Mail or Password',
-          'Please enter valid E-Mail or password', context);
+      DialogShower.showDialogBox('Wrong E-Mail or Password',
+          'Please enter valid E-Mail or password', context, null);
     }
-  }
-
-  static Future<bool> isUserLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('userEmail') == true) {
-      return true;
-    }
-    return false;
   }
 }

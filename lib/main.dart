@@ -36,9 +36,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Orders(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => AuthenticationManipulator(),
-        ),
       ],
       child: MaterialApp(
         title: 'GKMApp',

@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,6 +25,7 @@ class SignupCard extends StatelessWidget {
   final GlobalKey<FormState> _formKey;
   SignupCard(this.changeScreenHandler, this._formKey);
   String _name, _surname, _email, _password_first, _password_second;
+  IAuthenticate _authMain = new AuthenticationManipulator();
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +158,7 @@ class SignupCard extends StatelessWidget {
   void signUpTheUser(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      AuthenticationManipulator.signUpUser(
-          context, _email, _name, _surname, _password_second);
+      _authMain.signUpUser(context, _email, _name, _surname, _password_second);
     }
   }
 
