@@ -1,5 +1,7 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/helper/authentication_helper.dart';
 import 'package:air_2011/interface_scheme/authentication_scheme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -125,25 +127,8 @@ class LoginCard extends StatelessWidget {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      _auth.loginUser(context, _email, _password);
+      String loginResponse = await _auth.loginUser(_email, _password);
+      AuthenticationHelper.loginHandler(context, loginResponse);
     }
   }
-
-  void forgotPassword(context) async {
-    _formKey.currentState.save();
-    print(_email);
-    _auth.forgotPassword(context, _email);
-  }
-
-  /*
-  void tryAutoSignIn(context) async {
-    bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
-    if (userSignedIn) {
-      final prefs = await SharedPreferences.getInstance();
-      _email = prefs.getString('userEmail');
-      _password = prefs.getString('userPassword');
-      AuthenticationManipulator.loginUser(context, _email, _password);
-    }
-  }
-  */
 }

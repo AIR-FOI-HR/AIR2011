@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/helper/authentication_helper.dart';
 import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/providers/app_user.dart';
 import 'package:air_2011/screens/add_order_screen.dart';
@@ -8,6 +9,7 @@ import 'package:air_2011/screens/view_orders_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/users.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -75,8 +77,9 @@ class AppDrawer extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
             title: Text('Log Out'),
-            onTap: () {
-              _auth.signOutUser(context);
+            onTap: () async {
+              await _auth.signOutUser();
+              AuthenticationHelper.redirectSignOut(context);
             },
           ),
           Divider(),

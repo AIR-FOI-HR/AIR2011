@@ -1,4 +1,5 @@
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/helper/authentication_helper.dart';
 import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,8 +80,9 @@ class ForgottenCard extends StatelessWidget {
   void forgotPassword(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      print(_email);
-      _auth.forgotPassword(context, _email);
+
+      bool emailExists = await _auth.forgotPassword(_email);
+      AuthenticationHelper.forgottenPasswordHandler(context, emailExists);
     }
   }
 }

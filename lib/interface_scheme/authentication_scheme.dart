@@ -1,6 +1,6 @@
 class IAuthenticate {
-  Future<void> signUpUser(context, email, name, surname, password) async {}
-  Future<void> signOutUser(context) async {}
-  Future<void> forgotPassword(context, email) async {}
-  Future<void> loginUser(context, email, password) async {}
+  Future<String> signUpUser(email, name, surname, password) async {}
+  Future<void> signOutUser() async {}
+  Future<bool> forgotPassword(email) async {}
+  Future<String> loginUser(email, password) async {}
 }

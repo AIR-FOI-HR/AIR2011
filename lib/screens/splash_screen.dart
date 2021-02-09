@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:air_2011/db_managers/authentication.dart';
+import 'package:air_2011/helper/authentication_helper.dart';
 import 'package:air_2011/interface_scheme/authentication_scheme.dart';
 import 'package:air_2011/screens/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,9 @@ class _SplashScreen extends State<SplashScreen> {
     //bool userSignedIn = await AuthenticationManipulator.isUserLoggedIn();
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('userEmail') == true) {
-      final prefs = await SharedPreferences.getInstance();
-
-      _auth.loginUser(context, prefs.getString('userEmail'),
-          prefs.getString('userPassword'));
+      String loginResponse = await _auth.loginUser(
+          prefs.getString('userEmail'), prefs.getString('userPassword'));
+      AuthenticationHelper.loginHandler(context, loginResponse);
     } else {
       Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
     }
