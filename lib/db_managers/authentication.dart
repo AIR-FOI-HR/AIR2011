@@ -13,8 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'notifications.dart';
 
 class AuthenticationManipulator implements IAuthenticate {
-  Future<void> signUpUser(context, email, name, surname, password) async {
-    print("Im here!");
+  @override
+  Future<String> signUpUser(email, name, surname, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -30,86 +30,67 @@ class AuthenticationManipulator implements IAuthenticate {
 
         DatabaseManipulator.createUser(appUserSignup);
         //continue with login
-        print(userCredential);
-        Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+        return 'success';
+      } else {
+        return 'notSuccessful';
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        DialogShower.showDialogBox('Password too weak',
-            'Please enter stronger password', context, null);
-      } else if (e.code == 'email-already-in-use') {
-        DialogShower.showDialogBox(
-            'E-Mail already in use',
-            'This E-Mail is already in use. Please try another E-Mail address',
-            context,
-            null);
-      }
+      return e.code;
     }
   }
 
-  Future<void> signOutUser(context) async {
+  Future<void> signOutUser() async {
     //unlinking fcm token from user
     final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
     DatabaseManipulator.removeTokenFromUser(_loggedUserUid);
-
-    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
     await FirebaseAuth.instance.signOut();
-
-    //deleting user info from phone
-    final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
   }
 
-  Future<void> forgotPassword(context, email) async {
+  Future<bool> forgotPassword(email) async {
     //unlinking fcm token from user
     try {
-      await FirebaseAuth.instance
+      return await FirebaseAuth.instance
           .sendPasswordResetEmail(email: email)
           .then((value) {
-        DialogShower.showDialogBox(
-            'Reset password E-Mail sent',
-            'Please check your E-Mail inbox to reset your password',
-            context,
-            LoginScreen.routeName);
+        return true;
       });
-    } on FirebaseAuthException catch (e) {
-      DialogShower.showDialogBox('This E-Mail does not exist',
-          'Please enter existing E-Mail address', context, null);
+    } on FirebaseAuthException catch (_) {
+      return false;
     }
   }
 
-  Future<void> loginUser(context, email, password) async {
+  Future<String> loginUser(email, password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email.trim(), password: password);
       if (userCredential != null) {
         CollectionReference users =
             FirebaseFirestore.instance.collection('Administrator');
-        users
+
+        return users
             .doc(userCredential.user.uid)
             .get()
-            .then((DocumentSnapshot documentSnapshot) {
+            .then((DocumentSnapshot documentSnapshot) async {
+          //linking fcm token to logged in user
+          final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
+          DatabaseManipulator.addTokenToUser(_loggedUserUid);
+
+          //saving user info on phone after successfull login
+          final prefrences = await SharedPreferences.getInstance();
+          prefrences.setString('userEmail', email);
+          prefrences.setString('userPassword', password);
+
           if (documentSnapshot.exists) {
-            Navigator.of(context)
-                .pushReplacementNamed(ViewOrdersScreen.routeName);
+            return 'admin';
           } else {
-            Navigator.of(context)
-                .pushReplacementNamed(ViewOrdersScreenClient.routeName);
+            return 'client';
           }
         });
-
-        //linking fcm token to logged in user
-        final String _loggedUserUid = FirebaseAuth.instance.currentUser.uid;
-        DatabaseManipulator.addTokenToUser(_loggedUserUid);
-
-        //saving user info on phone after successfull login
-        final prefrences = await SharedPreferences.getInstance();
-        prefrences.setString('userEmail', email);
-        prefrences.setString('userPassword', password);
+      } else {
+        return 'nonUser';
       }
     } on FirebaseAuthException catch (e) {
-      DialogShower.showDialogBox('Wrong E-Mail or Password',
-          'Please enter valid E-Mail or password', context, null);
+      return e.code;
     }
   }
 }
